@@ -1,0 +1,156 @@
+/* Mantu Statyba v2: skaičiuoklės tema. Kraunama po ../styles.css ir calc.css.
+   Keičia tik išvaizdą (spalvos, šriftai, rėmai), skaičiavimo logikos neliečia. */
+:root {
+  --accent: #1438c8; --accent-d: #0c2590; --accent-s: #e3e8fa;
+  --ink: #10182b; --muted: #485066; --line: #9aa2b6; --bg: #eef0ea; --card: #fbfcf8; --soft: #eef0ea; --warm: #0c2590;
+  --r: 0px; --r-s: 0px;
+  --shadow: 6px 6px 0 #10182b;
+  --sans: Cambria, Charter, "Bitstream Charter", "Noto Serif", "Iowan Old Style", Georgia, serif;
+  --serif: "MS Display", "sans-serif-condensed", "Franklin Gothic Medium", sans-serif;
+}
+body.calc-page { font: 16px/1.55 var(--sans); background-color: var(--paper); }
+.calc-page .wrap { max-width: 1440px; padding-left: 20px; padding-right: 20px; }
+@media (min-width: 1180px) { .calc-page .wrap { padding-left: calc(var(--pad) + var(--rail)); padding-right: var(--pad); } }
+.calc-page .app *, .calc-page .info *, .calc-page .mbar, .calc-page .ribbon { border-radius: 0 !important; }
+.calc-page h2 { font-stretch: normal; font-weight: 800; letter-spacing: .005em; line-height: 1; }
+.calc-page h3 { font-size: 1.4rem; letter-spacing: .02em; line-height: 1.05; }
+.calc-page .card h3 { font-size: 1.4rem; }
+/* .calc-page priešdėlis būtinas: calc.css taisyklė ".calc-page .wrap { padding: 0 20px }" kitaip nunulina viršaus ir apačios tarpus, ir S-02 etiketė prilimpa prie geltono šešėlio. */
+.calc-page .app { padding-top: 22px; padding-bottom: 56px; }
+.app > .lapas { margin-bottom: 20px; }
+.ribbon { background: var(--hz); color: var(--ink); font: 700 .75rem var(--mono); letter-spacing: .16em; text-transform: uppercase; border-bottom: 2px solid var(--ink); }
+.eyebrow, .progress-label, .live-k, .mbar-k, .lvl-k { font-family: var(--mono); }
+.eyebrow { font-size: .75rem; letter-spacing: .16em; }
+.skip { padding: 15px 16px; background: var(--hz); color: var(--ink); border-radius: 0; }
+.calc-page .app a:not(.btn), .calc-page .info a { color: var(--blue-d); }
+.calc-page .app .s0 a:not(.btn), .calc-page .app .res-hero a:not(.btn) { color: #fff; }
+.print-sheet h2, .print-sheet h3 { text-transform: none; }
+@media (max-width: 420px) { .btn { letter-spacing: 0; font-size: .8rem; padding-left: 12px; padding-right: 12px; } }
+.progress-label { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+
+/* Eiga */
+.progress { height: 12px; background: var(--paper2); border: 1.5px solid var(--ink); }
+.progress span { background: repeating-linear-gradient(-45deg, var(--ink) 0 6px, var(--hz) 6px 12px); }
+.switch { background: #7b8296; outline: 2px solid var(--ink); outline-offset: -2px; }
+.switch::after { box-shadow: none; border: 1.5px solid var(--ink); top: 3px; }
+input:checked + .switch { background: var(--blue); }
+.vat-switch, .tgl { font-family: var(--sans); }
+
+/* Kortelės ir parinktys */
+.step-card { background: var(--white); border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.step-card.s8 { border: 0; box-shadow: none; background: transparent; }
+.step-nav { border-top: 2px solid var(--ink); }
+.opt-in { border: 1.5px solid var(--ink); background: var(--white); }
+.opt:hover .opt-in { border-color: var(--blue); }
+.opt input:checked + .opt-in { background: var(--blue-s); border-color: var(--blue); box-shadow: 4px 4px 0 var(--blue); }
+.opt input:checked + .opt-in::after { width: 12px; height: 12px; }
+.inp { border: 1.5px solid var(--ink); background: #fff; }
+.unit { border: 1.5px solid var(--ink); border-left: 0; background: var(--paper2); font-family: var(--mono); color: var(--ink); }
+.lvl-in { border: 2px solid var(--ink); background: var(--white); }
+.lvl:hover .lvl-in { border-color: var(--blue); }
+.lvl input:checked + .lvl-in { background: var(--blue-s); border-color: var(--blue); box-shadow: 6px 6px 0 var(--blue); }
+.lvl-t { font-size: 1.7rem; text-transform: uppercase; font-stretch: normal; font-weight: 800; line-height: 1; }
+.lvl-art .off { fill: #c5cad8; }
+.wgroup, .room, .helper-box { border: 1.5px solid var(--ink); background: var(--paper); }
+.wgroup.pkgs { background: var(--white); border: 2px solid var(--blue); }
+.witem { border-top-color: var(--rule); }
+.wg-ic { background: var(--ink); }
+.room-n { background: var(--blue); font-family: var(--mono); }
+.pk-amt { border-color: var(--ink); font-family: var(--mono); }
+.pk-amt.on { background: var(--hz); border-color: var(--ink); color: var(--ink); }
+.callout { border: 1.5px solid var(--ink); }
+.callout.ok { background: var(--blue-s); border-color: var(--blue); }
+.callout.warn { border-color: #8a5310; }
+.cbox label, .privacy { border: 1.5px solid var(--ink); }
+.box { border-color: var(--ink); }
+
+/* Mygtukai */
+.btn { border: 2px solid var(--ink); font: 700 .84rem/1.25 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.btn.primary { background: var(--hz); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.btn.primary:hover { background: #ffd53d; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.btn.ghost { background: var(--white); border-color: var(--ink); }
+.btn.ghost:hover { background: var(--blue-s); }
+.btn.link { border: 0; text-transform: none; letter-spacing: 0; font: 600 1rem var(--sans); }
+.btn.lg { font-size: .92rem; }
+.btn.icon { border-color: var(--ink); background: var(--white); }
+
+/* Įžanga: mėlynas brėžinio lapas */
+.step-card.s0, .res-hero { background: var(--blue); background-image: linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px; color: #fff; border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--hz); }
+.step-card.s0 { padding: 28px 20px 30px; margin-right: 10px; }
+.s0 .eyebrow, .res-hero .eyebrow { color: var(--hz); }
+.s0 .display { font: 800 clamp(2.9rem, 1.4rem + 7vw, 7rem)/.9 var(--serif); text-transform: uppercase; letter-spacing: 0; font-stretch: normal; color: #fff; }
+.s0 .lead { color: #fff; font-size: 1.12rem; }
+.s0 .fine { color: #e6eaff; font-family: var(--mono); font-size: .78rem; }
+.s0 .perks li { font-family: var(--mono); font-size: .86rem; font-weight: 700; }
+.s0 .perks .ic { background: var(--hz); color: var(--ink); }
+.s0 .btn.primary, .res-hero .btn.primary { box-shadow: 4px 4px 0 #fff; }
+.s0 .btn.ghost, .res-hero .btn.ghost { background: transparent; color: #fff; border-color: #fff; }
+.s0 a:not(.btn), .res-hero a:not(.btn) { color: #fff; }
+.s0 :focus-visible, .res-hero :focus-visible { outline-color: var(--hz); }
+.intro-art { background: rgba(255, 255, 255, .04); border: 1px dashed rgba(255, 255, 255, .6); }
+
+/* Gyva suma */
+.live-card { background: var(--ink); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--hz); }
+.live-k, .lv-k, .mbar-k { color: var(--hz); }
+.live-v { font-size: 1.8rem; text-transform: uppercase; font-stretch: normal; line-height: 1.05; }
+.lv-k { font-family: var(--mono); text-transform: none; }
+.live-s, .live-acc, .live-split li.lv-pk { color: #e3e7f5; }
+.live-note, .mb-vat, .live-split li.lv-pk-h { color: #c9cfe3; }
+.live-split, .live-split li.lv-pk-h { border-color: #48526e; }
+.live .acc-bar span { background: #48526e; } .live .acc-bar span.on { background: var(--hz); }
+.mbar { background: var(--ink); border-top: 3px solid var(--hz); }
+.acc-bar span { background: #c5cad8; }
+
+/* Rezultatas */
+.res-hero { margin-right: 10px; }
+.res-hero h2 { font-family: var(--serif); text-transform: uppercase; }
+.big { font-size: clamp(2.3rem, 1.2rem + 5.2vw, 5.4rem); line-height: .95; text-transform: uppercase; font-stretch: normal; letter-spacing: 0; }
+.mid, .acc-t { color: #edf0ff; }
+.res-hero .acc-bar span.on, .res-hero input:checked + .switch { background: var(--hz); }
+.res-hero .switch { background: rgba(255, 255, 255, .3); outline-color: #fff; }
+.card { background: var(--white); border: 2px solid var(--ink); box-shadow: 6px 6px 0 rgba(16, 24, 43, .2); }
+.card.soft { background: var(--paper2); box-shadow: none; }
+.weeks { font-size: 1.8rem; text-transform: uppercase; font-stretch: normal; }
+.big-ic { background: var(--hz); color: var(--ink); }
+.grp { border: 1.5px solid var(--ink); background: var(--white); }
+.g-ic { background: var(--blue); color: #fff; }
+.g-bar { background: var(--paper2); }
+.chg li { border-color: var(--line); background: var(--paper); }
+.legend th, .legend td, .lines th, .lines td, .tot-row { border-bottom-color: var(--rule); }
+.lines thead th { background: var(--paper2); font-family: var(--mono); color: var(--ink); }
+.seg-d { background: var(--ink); }
+.seg-m, .g-m { background: repeating-linear-gradient(45deg, #10182b 0 3px, #8f97ad 3px 5px); }
+.d-k, .d-v { font-family: var(--mono); }
+
+/* Informacija ir lentelės */
+.calc-page .info { padding-top: 0; }
+.info > h2 { font-size: clamp(2.3rem, 1.2rem + 4.6vw, 4.8rem); text-transform: uppercase; }
+.info-card { background: var(--white); border: 2px solid var(--ink); }
+.info-card.soft { background: var(--hz); box-shadow: 6px 6px 0 var(--ink); }
+.sources { background: var(--white); border: 2px solid var(--ink); }
+.sources summary { font-family: var(--mono); font-size: .86rem; letter-spacing: .06em; text-transform: uppercase; }
+.sum-h { font-size: 1.6rem; font-stretch: normal; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-family: var(--serif); }
+.sum-s { text-transform: none; letter-spacing: 0; font-family: var(--sans); }
+.ptable-wrap { border: 1.5px solid var(--ink); }
+.ptable thead th { font-family: var(--mono); }
+.conf { font-family: var(--mono); border: 1px solid currentColor; }
+.assume li { border: 1.5px solid var(--ink); background: var(--white); }
+.assume li::before { background: var(--hz); color: var(--ink); font-family: var(--mono); border: 1.5px solid var(--ink); }
+.calc-page .ftr { margin-top: 64px; }
+@media (max-width: 639px) {
+  table.stack tr { border: 1.5px solid var(--ink); background: var(--white); }
+  table.stack td { border-top-color: var(--rule); }
+  .ptable-wrap { border: 0; }
+}
+@media (max-width: 559px) { .calc-page .hdr { position: relative; } }
+@media (min-width: 760px) { .step-card.s0 { padding: 40px 40px 44px; } }
+@media (min-width: 1100px) {
+  .live { top: 96px; }
+  .stepper li::before { background: var(--paper2); border: 1.5px solid var(--ink); font-family: var(--mono); color: var(--ink); }
+  .stepper li.done::before { background: var(--hz); color: var(--ink); }
+  .stepper li.cur::before { background: #fff; color: var(--ink); }
+  .stepper button { border: 0; border-bottom: 2px solid var(--rule); }
+  .stepper li.done button { border-bottom-color: var(--ink); }
+  .stepper li.done button:hover { background: var(--paper2); }
+  .stepper li.cur button { background: var(--blue); color: #fff; border-bottom-color: var(--ink); }
+}

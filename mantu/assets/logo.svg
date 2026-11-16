@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 475" role="img" aria-labelledby="t">
+  <title id="t">Mantu Statyba</title>
+  <!-- Logotipas tamsiam fonui. Atkurta pagal savininko logotipą (assets/logo-original.png). Raidės nupieštos linijomis, šrifto nereikia. -->
+  <rect x="5" y="5" width="390" height="465" rx="34" fill="#0b0b0c" stroke="#fff" stroke-width="10"/>
+  <g stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M55 12V48M103 12V48M151 12V76M199 12V48M247 12V48M295 12V76M343 12V48"/>
+  </g>
+  <g stroke="#e0242f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M40 190V115L75 185L110 115V190"/>
+    <path d="M118 190L149 115L180 190M128 166H170"/>
+    <path d="M188 190V115L240 190V115"/>
+    <path d="M248 115H300M274 115V190"/>
+    <path d="M310 115V165A25 25 0 0 0 360 165V115"/>
+  </g>
+  <g stroke="#fff" stroke-width="8" stroke-linecap="round" fill="none">
+    <path d="M34 222H368" stroke-dasharray="26 21"/>
+    <path d="M34 243H368" stroke-dasharray="26 21" stroke-dashoffset="-23"/>
+    <path d="M34 264H368" stroke-dasharray="26 21"/>
+  </g>
+  <g stroke="#e0242f" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M58 300C54 293 48 290 42 290C32 290 26 297 26 307C26 318 34 322 43 326C53 330 60 335 60 347C60 358 52 365 42 365C34 365 28 361 24 354"/>
+    <path d="M69 290H111M90 290V365"/>
+    <path d="M121 365L145 290L169 365M129 340H161"/>
+    <path d="M178 290H220M199 290V365"/>
+    <path d="M229 290L251 330L273 290M251 330V365"/>
+    <path d="M283 365V290H300C309 290 314 298 314 308C314 319 308 327 300 327H283M300 327H303C313 327 319 336 319 346C319 357 313 365 303 365H283"/>
+    <path d="M328 365L352 290L376 365M336 340H368"/>
+  </g>
+  <g stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M70 465V428L95 403L120 428V465M95 403H143L168 428V465M120 428H168M131 465V444H141V465M150 438H158V448H150Z"/>
+    <path d="M227 465V428L252 403L277 428V465M252 403H300L325 428V465M277 428H325M288 465V444H298V465M307 438H315V448H307Z"/>
+  </g>
+</svg>

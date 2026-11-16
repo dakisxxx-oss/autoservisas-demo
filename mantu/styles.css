@@ -1,0 +1,356 @@
+/* Mantu Statyba v2. Dizaino kryptis: darbo brėžinys. Popierius, kobalto mėlyna, signalinė geltona.
+   Tik sisteminiai šriftai (local), jokių išorinių išteklių. */
+@font-face { font-family: "MS Display"; font-weight: 100 900; font-style: normal;
+  src: local("Impact"), local("Haettenschweiler"), local("AvenirNextCondensed-Heavy"), local("Avenir Next Condensed Heavy"), local("HelveticaNeue-CondensedBlack"), local("DIN Condensed Bold"); }
+:root {
+  --paper: #eef0ea; --paper2: #e2e5dc; --white: #fbfcf8;
+  --ink: #10182b; --muted: #485066;
+  --blue: #1438c8; --blue-d: #0c2590; --blue-s: #e3e8fa;
+  --hz: #ffc400; --red: #b3121d;
+  --rule: rgba(16, 24, 43, .22);
+  --disp: "MS Display", "sans-serif-condensed", "Franklin Gothic Medium", sans-serif;
+  --mono: Consolas, "Cascadia Mono", "SF Mono", Menlo, "DejaVu Sans Mono", ui-monospace, monospace;
+  --text: Cambria, Charter, "Bitstream Charter", "Noto Serif", "Iowan Old Style", Georgia, serif;
+  --hdr-h: 64px; --rail: 0px;
+  --pad: clamp(16px, 4vw, 56px);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--hdr-h) + 10px); }
+body { margin: 0; font: 18px/1.55 var(--text); color: var(--ink); background: var(--paper); overflow-x: hidden; }
+img, svg { max-width: 100%; }
+a { color: var(--blue-d); text-underline-offset: 3px; }
+p { margin: 0 0 1em; }
+ul, ol { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3 { font-family: var(--disp); font-weight: 800; text-transform: uppercase; line-height: .95; margin: 0 0 .4em; letter-spacing: .005em; }
+h2 { font-size: clamp(2.6rem, 1.4rem + 5.6vw, 6.2rem); }
+h3 { font-size: 1.5rem; line-height: 1.05; }
+:focus-visible { outline: 3px solid var(--hz); outline-offset: 3px; box-shadow: 0 0 0 6px var(--ink); }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--hz); color: var(--ink); padding: 15px 16px; font: 700 .9rem var(--mono); }
+.skip:focus { top: 8px; }
+.container { width: 100%; max-width: 1440px; margin: 0 auto; padding-left: calc(var(--pad) + var(--rail)); padding-right: var(--pad); }
+.ico { width: 20px; height: 20px; flex: none; }
+/* Vieno stulpelio tinkleliai telefone: stulpelis negali išsiplėsti dėl nelūžtančio teksto */
+.hero-b, .pj, .pj-head, .calc-b, .eiga-h, .geo-top, .ats, .ats-q, .obj-top, .karj, .kont { grid-template-columns: minmax(0, 1fr); }
+.mono { font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+.ol { -webkit-text-fill-color: transparent; -webkit-text-stroke: 2px currentColor; }
+
+/* Žyma KEISTI: raudonas antspaudas */
+.keisti { display: inline-block; font: 700 .75rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--red); background: var(--white); border: 2px solid var(--red); padding: 4px 6px; transform: rotate(-3deg); vertical-align: middle; margin-left: 6px; white-space: nowrap; }
+
+/* Mygtukai: stačiakampiai su kietu šešėliu */
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 10px 20px; border: 2px solid var(--ink); background: var(--white); color: var(--ink); font: 700 .86rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; cursor: pointer; white-space: nowrap; box-shadow: 5px 5px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s; }
+.button:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--ink); }
+.button:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--ink); }
+.button--hz { background: var(--hz); }
+.button--blue { background: var(--blue); color: #fff; }
+.button--lg { min-height: 60px; padding: 14px 26px; font-size: .95rem; }
+@media (max-width: 400px) { .button { letter-spacing: .03em; padding-left: 14px; padding-right: 14px; } .button--lg { font-size: .82rem; } }
+.on-dark .button { border-color: #fff; box-shadow: 5px 5px 0 #fff; }
+.on-dark .button:hover { box-shadow: 3px 3px 0 #fff; }
+.on-dark .button--line { background: transparent; color: #fff; }
+
+/* Antraštė */
+.hdr { position: sticky; top: 0; z-index: 50; background: var(--paper); border-bottom: 2px solid var(--ink); }
+.hdr-in { display: flex; align-items: center; gap: 14px; min-height: var(--hdr-h); padding: 0 var(--pad); max-width: none; }
+.brand-link { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; min-width: 44px; text-decoration: none; color: var(--ink); margin-right: auto; }
+.brand-link img { width: 38px; height: 45px; display: block; }
+.brand-txt { display: grid; line-height: 1; }
+.brand-name { font: 800 1.35rem/1 var(--disp); text-transform: uppercase; letter-spacing: .02em; }
+.brand-sub { font: .75rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+.nav { display: none; }
+.nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; font: 700 .76rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); text-decoration: none; white-space: nowrap; background: linear-gradient(var(--hz), var(--hz)) left 12px bottom 9px / 0 3px no-repeat; transition: background-size .18s; }
+.nav a:hover { background-size: calc(100% - 24px) 3px; }
+.hdr-act { display: flex; align-items: center; gap: 10px; }
+.hdr-tel { display: none; align-items: center; min-height: 44px; font: 700 .86rem var(--mono); letter-spacing: .04em; color: var(--ink); text-decoration: none; white-space: nowrap; padding: 0 6px; }
+.hdr-calc { display: none; min-height: 44px; box-shadow: 3px 3px 0 var(--ink); padding: 8px 14px; font-size: .78rem; }
+.lang { display: flex; align-items: stretch; border: 2px solid var(--ink); font: 700 .78rem var(--mono); }
+.lang span, .lang a { display: grid; place-items: center; min-width: 30px; min-height: 40px; padding: 0 6px; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.lang a { min-width: 44px; min-height: 44px; }
+.lang span { background: var(--ink); color: #fff; }
+.lang a:hover { background: var(--hz); }
+.menu-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 48px; min-height: 44px; padding: 0 10px; border: 2px solid var(--ink); background: var(--hz); color: var(--ink); font: 700 .76rem var(--mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+.bars { width: 20px; height: 12px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); flex: none; }
+.mtxt { display: none; }
+.mnav { display: none; position: absolute; left: 0; right: 0; top: 100%; height: calc(100vh - var(--hdr-h)); height: calc(100dvh - var(--hdr-h)); overflow-y: auto; background-color: var(--blue); background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 28px 28px; padding: 22px var(--pad) 120px; border-top: 2px solid var(--ink); }
+.mnav.is-open { display: block; }
+.mnav li { border-bottom: 1px solid rgba(255,255,255,.35); }
+.mnav li a { display: flex; align-items: center; justify-content: space-between; min-height: 62px; font: 800 2.3rem/1 var(--disp); text-transform: uppercase; color: #fff; text-decoration: none; }
+.mnav li a::after { content: "\2197"; font: 1.2rem var(--mono); color: var(--hz); }
+.mnav-btns { display: grid; gap: 14px; margin-top: 26px; padding-right: 6px; }
+@media (max-width: 349px) { .brand-txt { display: none; } }
+@media (max-width: 479px) { .brand-sub { display: none; } }
+@media (min-width: 560px) { .mtxt { display: inline; } .hdr-calc { display: inline-flex; } }
+@media (min-width: 1180px) {
+  :root { --hdr-h: 72px; --rail: 40px; }
+  .nav { display: flex; margin-right: auto; }
+  .brand-link { margin-right: 26px; }
+  .menu-btn, .mnav, .mnav.is-open { display: none; }
+  .hdr-tel { display: inline-flex; }
+}
+
+/* Aukščio liniuotė (fiksuota kairėje, tik plačiame ekrane) */
+.rail { display: none; }
+@media (min-width: 1180px) {
+  .rail { display: block; position: fixed; z-index: 40; left: 0; top: var(--hdr-h); bottom: 0; width: 80px; pointer-events: none; }
+  .rail::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 40px; background: var(--paper) repeating-linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px 10px) right 0 top 0 / 8px 100% no-repeat; border-right: 2px solid var(--ink); }
+  .rail::after { content: ""; position: absolute; left: 22px; top: 0; bottom: 0; width: 16px; background: repeating-linear-gradient(to bottom, var(--ink) 0 2px, transparent 2px 50px); }
+  .rail-m { position: absolute; left: 0; top: 0; width: 76px; height: 26px; margin-top: -13px; background: var(--hz); color: var(--ink); border: 2px solid var(--ink); border-left: 0; font: 700 .75rem/22px var(--mono); text-align: center; clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%); padding-right: 8px; will-change: top; }
+  .rail-t { position: absolute; left: 4px; bottom: 12px; writing-mode: vertical-rl; transform: rotate(180deg); font: .75rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); background: var(--paper); padding: 4px 0; }
+  /* Liniuotė kaip slankiklis: 40 px juosta priima paspaudimus, žymė tempiama */
+  .rail { touch-action: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+  .rail::before, .rail-m { pointer-events: auto; }
+  .rail-m { cursor: grab; touch-action: none; }
+  .rail.is-drag, .rail.is-drag .rail-m { cursor: grabbing; }
+  .rail:focus-visible { outline: none; box-shadow: none; }
+  .rail:focus-visible::before { outline: 3px solid var(--hz); outline-offset: -3px; }
+  .rail-t { pointer-events: none; }
+}
+
+/* Lapo antraštė (kiekviena sekcija yra brėžinio lapas) */
+.lapas { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; border-top: 2px solid currentColor; padding-top: 8px; margin-bottom: clamp(22px, 4vw, 48px); font: 700 .75rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.lapas b { background: var(--ink); color: #fff; padding: 2px 7px; font-weight: 700; }
+.on-dark .lapas b { background: #fff; color: var(--ink); }
+.lapas span:last-child { text-align: right; }
+.sec { padding: clamp(40px, 7vw, 96px) 0 clamp(56px, 9vw, 128px); position: relative; }
+.grid-bg { background-image: linear-gradient(var(--g2) 1px, transparent 1px), linear-gradient(90deg, var(--g2) 1px, transparent 1px), linear-gradient(var(--g1) 1px, transparent 1px), linear-gradient(90deg, var(--g1) 1px, transparent 1px); background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px; background-position: -1px -1px; }
+.on-paper { --g1: rgba(20, 56, 200, .07); --g2: rgba(20, 56, 200, .14); }
+.on-dark { color: #fff; --g1: rgba(255, 255, 255, .07); --g2: rgba(255, 255, 255, .16); }
+.on-dark a:not(.button) { color: #fff; }
+.bg-blue { background-color: var(--blue); }
+.bg-ink { background-color: var(--ink); }
+
+/* Matmenų linija */
+.dim { display: flex; align-items: center; gap: 12px; font: 700 .75rem var(--mono); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.dim::before, .dim::after { content: ""; flex: 1; min-width: 16px; height: 13px; background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat; }
+.dim::before { border-left: 2px solid currentColor; }
+.dim::after { border-right: 2px solid currentColor; }
+.dim span { overflow: hidden; text-overflow: ellipsis; }
+
+/* A-00 Titulinis */
+.s-hero { padding: clamp(18px, 3vw, 36px) 0 clamp(70px, 9vw, 120px); overflow: hidden; }
+.s-hero .lapas { margin-bottom: clamp(14px, 2vw, 26px); }
+.s-hero h1 { font-size: clamp(3.2rem, 16.4vw, 11.6rem); line-height: .87; margin: 0 0 .16em; letter-spacing: 0; }
+.s-hero h1 span { display: block; }
+.h-b { color: var(--blue); }
+.h-hl { width: -moz-fit-content; width: fit-content; background: var(--hz); padding: .04em .1em 0; margin-left: -.04em; transform: rotate(-2.2deg) translateY(.03em); box-shadow: .06em .06em 0 var(--ink); position: relative; z-index: 1; }
+.s-hero .dim { color: var(--blue-d); margin: clamp(26px, 4vw, 44px) 0 clamp(22px, 3vw, 36px); }
+.hero-b { display: grid; gap: 30px; }
+.hero-lead { font-size: clamp(1.12rem, .95rem + .8vw, 1.5rem); line-height: 1.45; max-width: 34em; margin-bottom: 1.2em; }
+.hero-lead em { font-style: italic; background: linear-gradient(var(--hz), var(--hz)) 0 88% / 100% .32em no-repeat; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 16px 18px; padding-right: 6px; }
+.hero-tel { margin: 22px 0 0; font: .9rem var(--mono); }
+.hero-tel a { font-weight: 700; color: var(--ink); }
+
+/* Signalinė juosta su paslaugomis */
+.tape-w { position: relative; z-index: 3; overflow: hidden; padding: 30px 0; margin: -62px 0 -58px; pointer-events: none; }
+.tape { pointer-events: auto; position: relative; margin: 0 -3vw; transform: rotate(-1.6deg); background: var(--hz); border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); overflow: hidden; box-shadow: 0 8px 0 rgba(16, 24, 43, .18); }
+.tape::before, .tape::after { content: ""; display: block; height: 9px; background: repeating-linear-gradient(-45deg, var(--ink) 0 10px, var(--hz) 10px 20px); }
+.tape-run { display: flex; width: max-content; animation: tape 38s linear infinite; }
+.tape:hover .tape-run { animation-play-state: paused; }
+.tape ul { display: flex; flex: none; background: var(--hz); }
+.tape li { font: 800 clamp(1.5rem, 1rem + 2vw, 2.6rem)/1 var(--disp); text-transform: uppercase; padding: .34em 0; white-space: nowrap; color: var(--ink); background: var(--hz); }
+.tape li::after { content: "\2715"; font: 700 .5em var(--mono); margin: 0 1.1em; vertical-align: middle; }
+@keyframes tape { to { transform: translateX(-50%); } }
+
+/* A-01 Pjūvis: interaktyvios paslaugos */
+.s-pj { padding-top: clamp(76px, 10vw, 140px); }
+.pj-head { display: grid; gap: 10px 40px; margin-bottom: clamp(20px, 3vw, 40px); }
+.pj-head p { max-width: 36em; margin: 0; font-size: 1.05rem; }
+.pj { display: grid; gap: 0; }
+.pj-fig { margin: 0 calc(var(--pad) * -1); padding: 6px var(--pad) 4px; position: sticky; top: var(--hdr-h); z-index: 2; background: var(--blue); border-bottom: 1px solid rgba(255, 255, 255, .4); }
+.pj-fig svg { display: block; width: 100%; height: auto; max-height: 34vh; }
+.pj-fig figcaption { font: .75rem var(--mono); letter-spacing: .12em; text-transform: uppercase; opacity: .85; text-align: right; }
+.pj-svg { fill: none; stroke: #fff; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+.pj-svg text { fill: #fff; stroke: none; font: 11px var(--mono); }
+.pj-svg .thin { stroke-width: .8; opacity: .75; }
+.pj-svg .zf { fill: #fff; fill-opacity: 0; stroke: none; transition: fill-opacity .2s; }
+.pj-svg .z { cursor: pointer; transition: opacity .2s; }
+.pj-svg.has-on .z { opacity: .42; }
+.pj-svg.has-on .z.on { opacity: 1; stroke: var(--hz); }
+.pj-svg .z.on .zf { fill: var(--hz); fill-opacity: .22; }
+.pj-svg .z.on path, .pj-svg .z.on rect, .pj-svg .z.on circle { stroke-width: 2.2; }
+.pj-svg .z.on .zf { stroke-width: 0; }
+.pj-svg .mk { fill: var(--hz); stroke: none; opacity: 0; transition: opacity .2s; }
+.pj-svg .z.on .mk { opacity: 1; }
+.pj-list { border-top: 2px solid #fff; }
+.pj-list li { border-bottom: 1px solid rgba(255, 255, 255, .45); }
+.pj-btn { display: grid; grid-template-columns: 4.6em minmax(0, 1fr) 24px; align-items: center; gap: 10px; width: 100%; min-height: 58px; padding: 8px 0; background: none; border: 0; color: #fff; text-align: left; cursor: pointer; font: inherit; }
+.pj-btn .lv { font: 700 .75rem var(--mono); letter-spacing: .06em; opacity: .9; }
+.pj-btn .nm { font: 800 clamp(1.45rem, 1rem + 1.8vw, 2.5rem)/1 var(--disp); text-transform: uppercase; transition: transform .18s, color .18s; }
+.pj-btn .pl { width: 22px; height: 22px; position: relative; }
+.pj-btn .pl::before, .pj-btn .pl::after { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: currentColor; transition: transform .2s; }
+.pj-btn .pl::after { transform: rotate(90deg); }
+.pj-btn[aria-expanded="true"] .nm { color: var(--hz); transform: translateX(8px); }
+.pj-btn[aria-expanded="true"] .lv { color: var(--hz); opacity: 1; }
+.pj-btn[aria-expanded="true"] .pl::after { transform: none; }
+.pj-txt { display: none; padding: 0 0 18px 5.3em; max-width: 34em; }
+.pj-txt p { margin: 0; }
+li.on > .pj-txt { display: block; animation: wipe .28s ease both; }
+@keyframes wipe { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (hover: hover) { .pj-btn:hover .nm { color: var(--hz); } }
+@media (min-width: 900px) {
+  .pj-head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; }
+  .pj { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: start; }
+  .pj-fig { margin: 0; padding: 0; top: calc(var(--hdr-h) + 24px); border: 0; background: none; }
+  .pj-fig svg { max-height: 72vh; }
+}
+
+/* A-02 Skaičiuoklė */
+.s-calc { overflow: hidden; }
+.kk { font: 800 clamp(3rem, 13.4vw, 14rem)/.84 var(--disp); text-transform: uppercase; margin: 0 0 .12em -.03em; color: var(--hz); white-space: nowrap; }
+.kk i { font-style: normal; color: var(--hz); -webkit-text-fill-color: var(--hz); -webkit-text-stroke: 0; }
+.calc-b { display: grid; gap: 34px; }
+.calc-b p { max-width: 34em; }
+.calc-b .fine { font: .78rem/1.5 var(--mono); opacity: .85; margin: 22px 0 0; }
+/* Ruletė: preliminarios kainos intervalo vaizdas */
+.tapeline { border: 2px solid #fff; background: var(--hz); color: var(--ink); position: relative; height: 112px; overflow: hidden; align-self: end; }
+.tapeline::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 44px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 12px) 0 0 / 100% 16px no-repeat, repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 60px) 0 0 / 100% 34px no-repeat; }
+.tl-r { position: absolute; left: 22%; right: 26%; bottom: 14px; height: 42px; border: 2px solid var(--ink); border-top: 0; display: grid; place-items: end center; font: 700 .75rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding-bottom: 6px; background: linear-gradient(rgba(16,24,43,.14), rgba(16,24,43,.14)); animation: tl 5s ease-in-out infinite alternate; }
+.tl-a, .tl-z { position: absolute; bottom: 60px; font: 700 .75rem var(--mono); }
+.tl-a { left: 22%; transform: translateX(-50%); } .tl-z { right: 26%; transform: translateX(50%); }
+@keyframes tl { to { left: 30%; right: 16%; } }
+@media (min-width: 900px) { .calc-b { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: end; } }
+
+/* A-03 Eiga: laiptai */
+.s-eiga { background-color: var(--paper2); }
+.eiga-h { display: grid; gap: 8px 40px; margin-bottom: 30px; }
+.eiga-h p { margin: 0; max-width: 32em; }
+.laiptai { counter-reset: none; display: grid; }
+.laiptai li { border-top: 4px solid var(--ink); border-left: 4px solid var(--ink); padding: 12px 0 26px 16px; background: linear-gradient(135deg, rgba(20, 56, 200, .1), transparent 60%); }
+.laiptai li:nth-child(2) { margin-left: 9%; } .laiptai li:nth-child(3) { margin-left: 18%; } .laiptai li:nth-child(4) { margin-left: 27%; }
+.laiptai .k { font: 700 .75rem var(--mono); letter-spacing: .14em; color: var(--blue-d); }
+.laiptai h3 { font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.6rem); margin: 4px 0 6px; }
+.laiptai p { margin: 0; font-size: .98rem; max-width: 22em; }
+@media (min-width: 900px) {
+  .eiga-h { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; }
+  .laiptai { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: end; margin-top: -40px; border-bottom: 4px solid var(--ink); }
+  .laiptai li { margin-left: 0 !important; padding: 14px 18px 0 18px; }
+  .laiptai li:nth-child(1) { min-height: 150px; } .laiptai li:nth-child(2) { min-height: 220px; } .laiptai li:nth-child(3) { min-height: 290px; } .laiptai li:nth-child(4) { min-height: 360px; border-right: 4px solid var(--ink); }
+}
+
+/* A-04 Aprėptis: miestų siena */
+.s-geo { overflow: hidden; }
+.geo-top { display: grid; gap: 10px 40px; margin-bottom: 26px; }
+.geo-top p { margin: 0; max-width: 32em; }
+.miestai { display: flex; flex-wrap: wrap; gap: 0 .32em; font: 800 clamp(2.5rem, 11.5vw, 8.6rem)/1.12 var(--disp); text-transform: uppercase; }
+.miestai li { color: var(--blue); -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; transition: -webkit-text-fill-color .15s; }
+.miestai li:hover { -webkit-text-fill-color: currentColor; }
+.miestai li.hq { -webkit-text-fill-color: var(--ink); -webkit-text-stroke: 0; color: var(--ink); background: var(--hz); padding: 0 .08em; transform: rotate(-1.5deg); box-shadow: .05em .05em 0 var(--ink); }
+.miestai li.etc { font: 700 .86rem/1.4 var(--mono); letter-spacing: .08em; -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; color: var(--ink); align-self: center; flex-basis: 100%; margin-top: 14px; }
+@media (min-width: 900px) { .geo-top { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
+
+/* A-05 Atsiliepimai */
+.s-ats { background-color: var(--hz); overflow: hidden; }
+.ats { display: grid; gap: 30px; }
+.ats-n { font: 800 clamp(9rem, 44vw, 21rem)/.8 var(--disp); margin: 0 0 0 -.04em; }
+.ats-n small { font-size: .26em; letter-spacing: 0; }
+.ats-s { font: 700 .92rem/1.45 var(--mono); border-top: 2px solid var(--ink); padding-top: 10px; margin: 38px 0 20px; max-width: 22em; }
+.ats-q { display: grid; gap: 0; }
+.cit { margin: 0; padding: 26px 22px 20px; border: 2px solid var(--ink); position: relative; }
+.cit blockquote { margin: 0; font-style: italic; font-size: clamp(1.08rem, .95rem + .7vw, 1.5rem); line-height: 1.42; }
+.cit blockquote p { margin: 0; }
+.cit figcaption { margin-top: 16px; font: .76rem var(--mono); letter-spacing: .06em; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.cit figcaption b { text-transform: uppercase; letter-spacing: .12em; }
+.cit-1 { background: var(--ink); color: #fff; transform: rotate(-1.1deg); box-shadow: 8px 8px 0 rgba(16, 24, 43, .28); margin-right: 5%; }
+.cit-2 { background: var(--white); transform: rotate(1.2deg); margin: 40px 0 0 7%; box-shadow: 8px 8px 0 var(--ink); z-index: 1; }
+.antsp { position: absolute; right: 12px; top: -22px; font: 800 1.7rem/1 var(--disp); border: 3px double currentColor; padding: 6px 9px 4px; transform: rotate(8deg); background: var(--hz); color: var(--ink); }
+.cit-2 .antsp { right: auto; left: 14px; transform: rotate(-7deg); }
+.tr { font-style: normal; font-size: .9rem; line-height: 1.5; margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed currentColor; }
+.tr b { font: 700 .75rem var(--mono); letter-spacing: .14em; text-transform: uppercase; margin-right: 6px; }
+@media (min-width: 900px) { .ats { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 60px; align-items: center; } .cit { padding: 34px 34px 24px; } }
+
+/* A-06 Objektai: vietos tikroms nuotraukoms */
+.obj-top { display: grid; gap: 8px 40px; margin-bottom: 28px; }
+.obj-top p { margin: 0; max-width: 32em; }
+.remai { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.remas { border: 2px dashed var(--ink); aspect-ratio: 4 / 3; position: relative; display: grid; place-items: center; background: linear-gradient(to top right, transparent calc(50% - .6px), var(--rule) calc(50% - .6px), var(--rule) calc(50% + .6px), transparent calc(50% + .6px)), linear-gradient(to bottom right, transparent calc(50% - .6px), var(--rule) calc(50% - .6px), var(--rule) calc(50% + .6px), transparent calc(50% + .6px)); }
+.remas span { background: var(--paper); border: 1px solid var(--ink); padding: 5px 8px; font: 700 .75rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; text-align: center; max-width: 86%; }
+.remas:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+@media (min-width: 900px) {
+  .obj-top { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; }
+  .remai { grid-template-columns: 6fr 3fr 3fr; gap: 24px; align-items: start; }
+  .remas:first-child { grid-column: auto; aspect-ratio: 4 / 3; }
+  .remas:nth-child(2) { aspect-ratio: 3 / 4; margin-top: 70px; }
+  .remas:nth-child(3) { aspect-ratio: 1; margin-top: -30px; }
+}
+
+/* Karjera */
+.s-karj { padding: 0 0 clamp(56px, 8vw, 110px); }
+.karj { border: 2px solid var(--ink); background: var(--white); display: grid; gap: 20px; padding: 24px 22px 28px 40px; position: relative; box-shadow: 8px 8px 0 var(--blue); }
+.karj::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 18px; background: repeating-linear-gradient(-45deg, var(--ink) 0 9px, var(--hz) 9px 18px); border-right: 2px solid var(--ink); }
+.karj h2 { font-size: clamp(2rem, 1.3rem + 3vw, 3.8rem); margin-bottom: .25em; }
+.karj p { margin: 0; max-width: 38em; }
+.karj-b { display: flex; flex-wrap: wrap; gap: 16px; padding-right: 6px; }
+@media (min-width: 900px) { .karj { grid-template-columns: minmax(0, 1fr) auto; align-items: end; padding: 34px 40px 38px 62px; } }
+
+/* A-07 Kontaktai */
+.s-kont { overflow: hidden; }
+.tel-xl { display: block; width: -moz-fit-content; width: fit-content; font: 800 clamp(2.4rem, 13vw, 10.5rem)/.9 var(--disp); color: #fff; text-decoration: none; white-space: nowrap; margin: 0 0 .1em -.03em; padding: 4px 0; position: relative; }
+.tel-xl::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: .08em; background: var(--hz); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+.tel-xl:hover::after { transform: none; }
+.kont-l { font-size: 1.1rem; max-width: 32em; margin-bottom: clamp(26px, 4vw, 48px); }
+.kont { display: grid; gap: 34px; }
+.rekv { border: 2px solid #fff; margin: 0; font-family: var(--mono); display: grid; grid-template-columns: 1fr 1fr; align-self: start; }
+.rekv div { padding: 10px 12px 11px; border-bottom: 1px solid rgba(255, 255, 255, .6); min-width: 0; }
+.rekv div:nth-child(odd) { border-right: 1px solid rgba(255, 255, 255, .6); }
+.rekv .w { grid-column: 1 / -1; border-right: 0 !important; }
+.rekv div:nth-last-child(-n+2) { border-bottom: 0; }
+.rekv dt { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; opacity: .9; }
+.rekv dd { margin: 3px 0 0; font-size: .95rem; font-weight: 700; overflow-wrap: anywhere; }
+.rekv dd a { display: inline-block; padding: 12px 0; margin: -10px 0; }
+.forma { background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--hz); padding: 0; }
+.forma-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--ink); color: #fff; padding: 10px 16px; font: 700 .75rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.forma-h h3 { font: inherit; margin: 0; letter-spacing: inherit; }
+.forma-b { padding: 18px 16px 22px; display: grid; gap: 14px; }
+.f2 { display: grid; gap: 14px; }
+.fld label { display: block; font: 700 .75rem var(--mono); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 5px; }
+.fld .opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
+.fld input, .fld select, .fld textarea { width: 100%; min-height: 50px; padding: 10px 12px; font: 1rem var(--text); color: var(--ink); background: var(--white); border: 0; border-bottom: 2px solid var(--ink); border-radius: 0; box-shadow: inset 0 0 0 1px var(--rule); }
+.fld textarea { min-height: 110px; resize: vertical; display: block; }
+.fld input:focus, .fld select:focus, .fld textarea:focus { outline: 3px solid var(--blue); outline-offset: 0; box-shadow: none; }
+.sut { display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: start; font-size: .9rem; line-height: 1.45; cursor: pointer; min-height: 44px; }
+.sut input { width: 26px; height: 26px; margin: 0; accent-color: var(--blue); }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-msg { margin: 0; font: 700 .86rem/1.4 var(--mono); color: var(--blue-d); min-height: 1.4em; overflow-wrap: anywhere; }
+.f-note { margin: 0; font-size: .84rem; color: var(--muted); line-height: 1.5; }
+.forma .button { justify-self: start; border-color: var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+.forma .button:hover { box-shadow: 3px 3px 0 var(--ink); }
+@media (min-width: 560px) { .f2 { grid-template-columns: 1fr 1fr; } .forma-b { padding: 24px 24px 28px; } }
+@media (min-width: 1000px) { .kont { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; } }
+
+/* Poraštė */
+.ftr { background: var(--ink); color: #dfe3ee; padding: clamp(40px, 6vw, 80px) 0 0; overflow: hidden; position: relative; }
+.ftr a { color: #fff; }
+.ftr-g { display: grid; gap: 28px; }
+.ftr-brand { display: flex; gap: 16px; align-items: center; }
+.ftr-brand img { width: 78px; height: 93px; display: block; flex: none; }
+.ftr-brand p { margin: 0; font: 800 1.9rem/1 var(--disp); text-transform: uppercase; color: #fff; }
+.ftr h2, .ftr h3 { font: 700 .75rem var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--hz); margin: 0 0 10px; }
+.ftr-g p, .ftr-g li { font: .86rem/1.7 var(--mono); margin: 0; }
+.ftr-g li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+.ftr-n { margin-top: 34px; border-top: 1px solid rgba(255, 255, 255, .3); padding-top: 16px; display: grid; gap: 6px; font: .76rem/1.6 var(--mono); }
+.ftr-n p { margin: 0; }
+.ftr-n .legal-note { color: var(--hz); }
+.ftr-xl { font: 800 14.4vw/.74 var(--disp); text-transform: uppercase; white-space: nowrap; color: #5a6890; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px currentColor; margin: 34px 0 0 -.03em; text-align: center; height: .62em; user-select: none; }
+@media (min-width: 800px) { .ftr-g { grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; } }
+
+/* Apatinė juosta telefone */
+.mbar-site { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); padding-bottom: env(safe-area-inset-bottom); background: var(--ink); }
+.mbar-site a { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; font: 700 .82rem var(--mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: #fff; background: var(--ink); white-space: nowrap; }
+.mbar-site a + a { background: var(--hz); color: var(--ink); }
+body.has-mbar { padding-bottom: 56px; }
+@media (min-width: 900px) { .mbar-site { display: none; } body.has-mbar { padding-bottom: 0; } }
+
+/* Atsiradimas slenkant: uždanga iš kairės. Veikia tik su JS (html.js). */
+.js .rv { clip-path: inset(0 100% 0 0); transition: clip-path .7s cubic-bezier(.2, .7, .1, 1); }
+.js .rv.in { clip-path: inset(-20% -20% -20% -20%); }
+.js .rv-up { opacity: 0; transform: translateY(26px); transition: opacity .5s, transform .5s cubic-bezier(.2, .7, .1, 1); }
+.js .rv-up.in { opacity: 1; transform: none; }
+.js .cit.rv-up.in.cit-1 { transform: rotate(-1.1deg); } .js .cit.rv-up.in.cit-2 { transform: rotate(1.2deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .js .rv { clip-path: none; } .js .rv-up { opacity: 1; transform: none; }
+}
+@media print { .hdr, .rail, .tape, .mbar-site { display: none !important; } }
