@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Remonto kainos skaičiuoklė | DEMO</title>
+  <meta name="description" content="Remonto kainos skaičiuoklė: atsakykite į kelis klausimus ir pamatysite preliminarią buto ar namo remonto kainą su intervalu, darbais, medžiagomis ir trukme.">
+  <meta name="theme-color" content="#1f5c4d">
+  <!-- KEISTI: kol tai DEMO, puslapis neindeksuojamas. Tikrai įmonei šią eilutę ištrinkite. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="calc.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#app">Pereiti prie skaičiuoklės</a>
+  <div class="ribbon" id="ribbon" hidden>DEMO versija. Įmonė, kontaktai ir privatumo tekstai išgalvoti.</div>
+
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="#app" aria-label="Į skaičiuoklės pradžią">
+        <span class="logo" id="logoText" aria-hidden="true">PR</span>
+        <span class="brand-txt"><span class="brand-name" id="brandName">Pavyzdinė remonto įmonė</span><span class="brand-sub">Remonto kainos skaičiuoklė</span></span>
+      </a>
+      <nav class="top-nav" aria-label="Pagalbinės nuorodos">
+        <a href="#metodika">Kaip skaičiuojame</a>
+        <a class="top-tel" id="topTel" href="tel:+37060000000"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span id="topTelTxt">+370 600 00000</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app" class="wrap app" tabindex="-1">
+    <h1 class="sr-only">Remonto kainos skaičiuoklė</h1>
+    <noscript><p class="noscript">Skaičiuoklei reikia JavaScript. Įjunkite jį naršyklėje arba skambinkite mums.</p></noscript>
+    <div class="progress-area" id="progressArea" hidden>
+      <div class="progress-top">
+        <p class="progress-label" id="progressLabel">Žingsnis 1 iš 9</p>
+        <label class="vat-switch">
+          <input type="checkbox" id="vatToggle" class="sr-only">
+          <span class="switch" aria-hidden="true"></span>
+          <span>Rodyti kainas be PVM</span>
+        </label>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progressFill"></span></div>
+      <nav aria-label="Skaičiuoklės žingsniai">
+        <ol class="stepper" id="stepper"></ol>
+      </nav>
+    </div>
+
+    <div class="layout" id="layout">
+      <section class="stage" id="stage" aria-live="off"></section>
+      <aside class="live" id="live" aria-label="Preliminari kaina" hidden>
+        <div class="live-card">
+          <p class="live-k">Preliminari kaina</p>
+          <p class="live-v" id="liveValue" aria-live="polite">Dar nepakanka duomenų</p>
+          <p class="live-s" id="liveSub"></p>
+          <div class="live-acc" id="liveAcc"></div>
+          <ul class="live-split" id="liveSplit"></ul>
+          <p class="live-note">Kainos pagal 2026 m. lapkričio rinką. Tai ne pasiūlymas.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="mbar" id="mbar" hidden>
+    <div class="wrap mbar-in">
+      <p class="mbar-k">Dabar</p>
+      <p class="mbar-v" id="mbarValue">Dar nepakanka duomenų</p>
+    </div>
+  </div>
+
+  <section class="wrap info" id="metodika" aria-labelledby="metodika-h" tabindex="-1">
+    <h2 id="metodika-h">Kaip skaičiuojame</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <p>Skaičiuojame iš apačios į viršų: iš ploto ir kambarių gauname sienų, lubų ir grindų plotus, iš jų darbų kiekius.</p>
+        <p>Kiekvienam darbui taikome rinkos įkainį ir pasirinktų medžiagų kainą su atsargomis nuostoliams.</p>
+        <p>Prie sumos pridedame rezervą netikėtiems darbams ir rodome intervalą, nes kiekiai ir kainos niekada nėra tikslūs iki apžiūros.</p>
+        <p>Kainų šaltiniai ir data: 2026 m. lapkritis. Kiekviena eilutė turi šaltinį ir patikimumo žymą lentelėje žemiau.</p>
+      </div>
+      <div class="info-card soft">
+        <h3>Kaip skaityti rezultatą</h3>
+        <p>Intervalas "nuo ir iki" rodo tikėtiną ribą. "Apie" yra vidutinis scenarijus. Kuo daugiau atsakymų patikslinate, tuo siauresnis intervalas.</p>
+        <p>Tai preliminarus įvertis, ne pasiūlymas. Tikslią kainą parodo sąmata po apžiūros.</p>
+      </div>
+    </div>
+    <details class="sources">
+      <summary>Kainų lentelė su šaltiniais ir patikimumu</summary>
+      <div class="table-wrap" id="priceTable"></div>
+      <div id="sourceList"></div>
+    </details>
+  </section>
+
+  <section class="wrap info" id="prielaidos" aria-labelledby="prielaidos-h">
+    <h2 id="prielaidos-h">Prielaidos ir apribojimai</h2>
+    <p class="lead-s">Šie dalykai yra mūsų prielaidos, ne patikrinti faktai. Juos turi peržiūrėti skaičiuoklę naudojanti įmonė.</p>
+    <ul class="assume" id="assumeList"></ul>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p><strong id="footName">Pavyzdinė remonto įmonė</strong>. <span id="footHours">I-V 8:00-17:00</span>, <span id="footCity">Lietuva</span>.</p>
+      <p><a id="footMail" href="mailto:uzklausos@pavyzdys.example">uzklausos@pavyzdys.example</a> <a id="footTel" href="tel:+37060000000">+370 600 00000</a></p>
+      <p class="foot-s">Skaičiuoklė veikia jūsų naršyklėje. Nenaudojame slapukų ir stebėjimo. Duomenys niekur nesiunčiami, kol patys neišsiunčiate laiško.</p>
+    </div>
+  </footer>
+
+  <div id="printSheet" class="print-sheet" aria-hidden="true"></div>
+
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="pat-stripe" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#8a561f"/><rect width="2.4" height="6" fill="#c99a62"/></pattern>
+      <pattern id="pat-dots" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#6b7480"/><circle cx="3" cy="3" r="1.3" fill="#a7aeb7"/></pattern>
+      <pattern id="pat-cross" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#2c3a4d"/><path d="M0 3.5h7M3.5 0v7" stroke="#55657b" stroke-width="1.2"/></pattern>
+    </defs>
+    <symbol id="i-flat" viewBox="0 0 24 24"><path d="M5 21V4.5A1.5 1.5 0 0 1 6.5 3h11A1.5 1.5 0 0 1 19 4.5V21M3 21h18M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M11 21v-3h2v3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-house" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7M5 9.5V20h14V9.5M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-room" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 14h6v6M14 4v5h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m14 6 4 4M5 19l8.5-8.5M12 4.5l3-1.5 6 6-1.5 3-2-1-3.5 3.5-4-4L13.5 7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-brush" viewBox="0 0 24 24"><path d="M4 4h13v5H4zM17 6.5h3v5h-8v2.5M11 14h2v7h-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-floor" viewBox="0 0 24 24"><path d="M3 9l9-5 9 5-9 5zM3 13l9 5 9-5M7.5 6.5l9 5M12 4v0M16.5 6.5l-9 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5zM9.5 15a2.5 2.5 0 0 0 2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3.5 21h17M14.5 12.5v.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pipe" viewBox="0 0 24 24"><path d="M4 7h8a4 4 0 0 1 4 4v9M4 11h7v9M14 20h4M2.5 5v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v7h-3M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><path d="M3.5 5.5h17v13h-17zM4 6l8 6.5L20 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 3.5h3.5l1.5 4-2 1.5a11 11 0 0 0 7 7l1.5-2 4 1.5V19a1.5 1.5 0 0 1-1.5 1.5A16.5 16.5 0 0 1 3.5 5 1.5 1.5 0 0 1 5 3.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5M12 7.6v.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4v4h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 3 8 7 9.5 4-1.5 7-5.1 7-9.5V6z M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  </svg>
+</body>
+</html>
