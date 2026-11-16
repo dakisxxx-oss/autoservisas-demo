@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Butų remontas ir apdaila Kaune | DEMO</title>
+  <meta name="description" content="DEMO svetainė: remonto ir apdailos įmonė Kaune. Butų remontas, apdaila, santechnika, elektros darbai, langų montavimas, nemokamas objekto įvertinimas.">
+  <meta name="theme-color" content="#1f4a37">
+  <!-- KEISTI: kol tai DEMO, svetainė neindeksuojama. Realiai įmonei ŠIĄ eilutę ištrinkite. -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- KEISTI: tikras domenas (canonical, og:url, og:image, JSON-LD, sitemap.xml, robots.txt) -->
+  <link rel="canonical" href="https://pavyzdys.example/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="lt_LT">
+  <meta property="og:site_name" content="Pavyzdinė remonto ir apdailos įmonė (DEMO)">
+  <meta property="og:title" content="Butų remontas ir apdaila Kaune | DEMO">
+  <meta property="og:description" content="DEMO svetainė: butų remontas, apdaila, santechnika, elektros darbai, langų montavimas ir nemokamas objekto įvertinimas Kaune.">
+  <meta property="og:url" content="https://pavyzdys.example/">
+  <meta property="og:image" content="https://pavyzdys.example/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pavyzdinė remonto ir apdailos įmonė, DEMO svetainės šablonas">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="styles.css">
+  <!-- Be JavaScript: meniu rodomas visada, mygtukas ir lipni antraštė išjungti -->
+  <noscript><style>.nav{display:block!important;position:static!important;max-height:none!important;padding:0 1rem .75rem!important}.nav-toggle{display:none!important}.site-header{position:static!important}.bar{flex-wrap:wrap}</style></noscript>
+
+  <!-- KEISTI: visi duomenys žemiau išgalvoti. Pakeiskite tikrais, o "DEMO" iš pavadinimo pašalinkite. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "GeneralContractor",
+    "name": "Pavyzdinė remonto ir apdailos įmonė (DEMO)",
+    "description": "DEMO svetainės šablonas. Išgalvota įmonė: butų remontas, apdaila, santechnika, elektros darbai, langų montavimas Kaune.",
+    "url": "https://pavyzdys.example/",
+    "image": "https://pavyzdys.example/og-image.png",
+    "telephone": "+370 600 00000",
+    "email": "info@pavyzdys.example",
+    "priceRange": "nuo X EUR",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Pavyzdžio g. 1",
+      "addressLocality": "Kaunas",
+      "postalCode": "00000",
+      "addressCountry": "LT"
+    },
+    "areaServed": { "@type": "City", "name": "Kaunas" },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "17:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "14:00" }
+    ],
+    "makesOffer": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Butų remontas" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Apdaila" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Santechnikos darbai" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Elektros darbai" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Langų montavimas" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Nemokamas objekto įvertinimas" } }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Piktogramos (vienas šaltinis, naudojamos per use) -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-6h4v6"/></symbol>
+    <symbol id="i-roller" viewBox="0 0 24 24"><rect x="4" y="3.5" width="14" height="5.5" rx="1.5"/><path d="M18 6.2h2v5.3h-8v3"/><rect x="10.5" y="14.5" width="3" height="6.5" rx="1"/></symbol>
+    <symbol id="i-tap" viewBox="0 0 24 24"><path d="M4 5v6"/><path d="M4 8h9a4 4 0 0 1 4 4v1"/><path d="M15 16.5s2 2 2 3.2a2 2 0 0 1-4 0c0-1.2 2-3.2 2-3.2z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 13h6l-1 8 8-10h-6z"/></symbol>
+    <symbol id="i-window" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M12 3v18M4 12h16"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M8.5 12h7M8.5 16h5"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  </svg>
+
+  <a class="skip" href="#turinys">Pereiti prie turinio</a>
+
+  <aside class="ribbon" aria-label="Demonstracinė versija">
+    <div class="container">
+      <p><strong>DEMO</strong> <span>Pavyzdinė svetainė. Įmonė, telefonas, adresas ir kainos yra išgalvoti.</span></p>
+    </div>
+  </aside>
+
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="#top">
+        <img src="favicon.svg" alt="" width="32" height="32">
+        <span>Pavyzdinė remonto ir apdailos įmonė</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Meniu</button>
+      <nav class="nav" id="nav" aria-label="Pagrindinė navigacija">
+        <ul>
+          <li><a href="#paslaugos">Paslaugos</a></li>
+          <li><a href="#kodel-mes">Kodėl mes</a></li>
+          <li><a href="#kainos">Kainos</a></li>
+          <li><a href="#atsiliepimai">Atsiliepimai</a></li>
+          <li><a href="#duk">DUK</a></li>
+          <li><a href="#kontaktai">Kontaktai</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary header-call" href="tel:+37060000000">
+        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+        <span>+370 600 00000</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="turinys">
+    <section class="hero on-dark" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Remontas ir apdaila Kaune</p>
+          <h1 id="hero-title">Buto remontas be chaoso: aiški sąmata ir terminas</h1>
+          <!-- KEISTI: pagrindinis pažadas. Rašykite tik tai, ką įmonė tikrai gali įvykdyti. -->
+          <p class="lead">Atvykstame į objektą nemokamai, apskaičiuojame darbus ir sutariame dėl kainos bei termino prieš pradėdami. Be netikėtų priedų sąskaitoje.</p>
+          <div class="cta">
+            <a class="btn btn-call btn-lg" href="tel:+37060000000">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+              <span>Skambinti +370&nbsp;600&nbsp;00000</span>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#kontaktai">Užsakyti nemokamą įvertinimą</a>
+          </div>
+          <ul class="checks">
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Nemokamas objekto įvertinimas</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Sąmata prieš darbus</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Terminas ir kaina sutartyje</li>
+          </ul>
+          <p class="status" id="status" aria-live="polite"></p>
+        </div>
+        <div class="hero-art">
+          <img src="assets/hero.svg" width="640" height="372" alt="Iliustracija: kambarys remonto metu su dažymo volu, kopėčiomis, langu ir įrankių dėže">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="paslaugos" aria-labelledby="paslaugos-title">
+      <div class="container">
+        <h2 id="paslaugos-title">Paslaugos</h2>
+        <p class="section-lead">Darbai, kurių dažniausiai prireikia keičiantis butą ar namą. Nematote savo darbo sąraše? Paskambinkite, pasakysime, ar galime padėti.</p>
+        <!-- KEISTI: paslaugų sąrašas pagal tai, ką įmonė tikrai daro -->
+        <div class="grid cols cols-3">
+          <article class="card">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-home"/></svg></div>
+            <h3>Butų remontas</h3>
+            <p>Pilnas ar dalinis buto remontas: ardymas, sienų ir grindų išlyginimas, lubos, pertvaros. Darbų eigą ir etapus suderiname iš anksto.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-roller"/></svg></div>
+            <h3>Apdaila</h3>
+            <p>Dažymas, tapetavimas, plytelių klijavimas, grindų dangos ir grindjuosčių montavimas, vidaus durų įrengimas.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-tap"/></svg></div>
+            <h3>Santechnika</h3>
+            <p>Vamzdynų keitimas, vonios ir dušo įrengimas, unitazų, kriauklių ir maišytuvų montavimas, skalbimo mašinos prijungimas.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bolt"/></svg></div>
+            <h3>Elektros darbai</h3>
+            <p>Laidų keitimas, rozečių, jungiklių ir šviestuvų montavimas, skydelio tvarkymas. Dideles apimtis atlieka kvalifikuoti specialistai.</p>
+            <!-- KEISTI: čia galima nurodyti tikrą elektrikų kvalifikaciją ar leidimus -->
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-window"/></svg></div>
+            <h3>Langų montavimas</h3>
+            <p>Senų langų keitimas, naujų montavimas, sandarinimas, palangių ir angokraščių apdaila. Pamatuojame ir suderiname dydžius.</p>
+          </article>
+          <article class="card card-featured">
+            <div class="card-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-clip"/></svg></div>
+            <h3>Nemokamas objekto įvertinimas</h3>
+            <p>Atvykstame, pamatuojame, aptariame pageidavimus ir paruošiame sąmatą. Įvertinimas nemokamas ir jūsų neįpareigoja.</p>
+            <!-- KEISTI: palikite tik jei įmonė tikrai vertina nemokamai -->
+            <a class="card-link" href="#kontaktai">Užsakyti įvertinimą<span class="sr-only"> (pereiti prie formos)</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="kodel-mes" aria-labelledby="kodel-title">
+      <div class="container">
+        <h2 id="kodel-title">Kodėl rinktis mus</h2>
+        <p class="section-lead">Keturi dalykai, kurių tikisi dauguma užsakovų.</p>
+        <!-- KEISTI: įrašykite tikrus įmonės privalumus (patirtis, garantija, įranga) -->
+        <ol class="why" role="list">
+          <li>
+            <h3>Sąmata prieš darbus</h3>
+            <p>Prieš pradėdami pateikiame darbų ir medžiagų sąmatą. Jei darbų apimtis keičiasi, pirmiausia suderiname su jumis.</p>
+          </li>
+          <li>
+            <h3>Aiškus terminas</h3>
+            <p>Darbų pradžią ir pabaigą užrašome sutartyje. Apie galimus pokyčius pranešame iš anksto.</p>
+          </li>
+          <li>
+            <h3>Tvarka objekte</h3>
+            <p>Baldus ir grindis apsaugome, o po darbų išvežame statybines atliekas ir sutvarkome patalpas.</p>
+          </li>
+          <li>
+            <h3>Vienas kontaktinis asmuo</h3>
+            <p>Jūsų objektą prižiūri vienas darbų vadovas. Žinote, ką klausti ir kas atsakys.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="kainos" aria-labelledby="kainos-title">
+      <div class="container">
+        <h2 id="kainos-title">Kainos</h2>
+        <p class="section-lead">Orientacinės kainos. Galutinę kainą nustato sąmata po objekto apžiūros.</p>
+        <!-- KEISTI: X pakeiskite tikromis kainomis arba ištrinkite visą sekciją, jei kainų skelbti nenorima -->
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Orientacinės paslaugų kainos</caption>
+            <thead>
+              <tr><th scope="col">Darbai</th><th scope="col">Kaina</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Buto remontas (1&nbsp;kv.&nbsp;m)</th><td class="price">nuo X EUR</td></tr>
+              <tr><th scope="row">Dažymas ir apdaila (1&nbsp;kv.&nbsp;m)</th><td class="price">nuo X EUR</td></tr>
+              <tr><th scope="row">Santechnikos taško keitimas</th><td class="price">nuo X EUR</td></tr>
+              <tr><th scope="row">Elektros taško įrengimas</th><td class="price">nuo X EUR</td></tr>
+              <tr><th scope="row">Lango montavimas (1 vnt.)</th><td class="price">nuo X EUR</td></tr>
+              <tr><th scope="row">Objekto apžiūra ir sąmata</th><td class="price">nemokamai</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">X yra vieta tikrai kainai. Medžiagų kaina skaičiuojama atskirai ir įrašoma sąmatoje.</p>
+      </div>
+    </section>
+
+    <section class="section soft" id="atsiliepimai" aria-labelledby="atsiliepimai-title">
+      <div class="container">
+        <h2 id="atsiliepimai-title">Užsakovų atsiliepimai</h2>
+        <p class="section-lead">Demonstracinėje versijoje rodome tik vietas atsiliepimams. Išgalvotų atsiliepimų čia nėra ir niekada nebus.</p>
+        <!-- KEISTI: dėkite tik tikrus atsiliepimus ir tik gavę užsakovo sutikimą. Jei jų nėra, ištrinkite visą sekciją ir nuorodą meniu. -->
+        <div class="grid cols cols-3">
+          <div class="placeholder">
+            <p class="tag">VIETA ATSILIEPIMUI</p>
+            <p>[Čia bus tikro užsakovo atsiliepimo tekstas]</p>
+            <p>[Vardas, objekto tipas, data]</p>
+          </div>
+          <div class="placeholder">
+            <p class="tag">VIETA ATSILIEPIMUI</p>
+            <p>[Čia bus tikro užsakovo atsiliepimo tekstas]</p>
+            <p>[Vardas, objekto tipas, data]</p>
+          </div>
+          <div class="placeholder">
+            <p class="tag">VIETA ATSILIEPIMUI</p>
+            <p>[Čia bus tikro užsakovo atsiliepimo tekstas]</p>
+            <p>[Vardas, objekto tipas, data]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="duk" aria-labelledby="duk-title">
+      <div class="container">
+        <h2 id="duk-title">Dažniausi klausimai</h2>
+        <!-- KEISTI: atsakymus pritaikykite realiai įmonei. Laužtiniai skliaustai žymi vietas, kur reikia tikros informacijos. -->
+        <div class="faq">
+          <details>
+            <summary>Ar objekto įvertinimas tikrai nemokamas?</summary>
+            <div class="answer"><p>Taip. Atvykimas, matavimai ir pirminė sąmata nemokami ir jūsų neįpareigoja. Tada patys nusprendžiate, ar dirbti kartu.</p></div>
+          </details>
+          <details>
+            <summary>Kiek laiko trunka buto remontas?</summary>
+            <div class="answer"><p>Tai priklauso nuo ploto ir darbų apimties. Tikslų terminą įrašome sutartyje po objekto apžiūros.</p></div>
+          </details>
+          <details>
+            <summary>Ar medžiagas perkate jūs, ar užsakovas?</summary>
+            <div class="answer"><p>Galimi abu variantai. Kaip tai daroma, aptariame prieš pasirašant sutartį.</p></div>
+          </details>
+          <details>
+            <summary>Ar galima gyventi bute remonto metu?</summary>
+            <div class="answer"><p>Per dalinį remontą dažnai galima, per pilną remontą paprastai ne. Tai aptariame apžiūros metu.</p></div>
+          </details>
+          <details>
+            <summary>Kaip vyksta apmokėjimas?</summary>
+            <div class="answer"><p>[Čia įrašykite tikrą apmokėjimo tvarką: avansas, etapai, galutinis atsiskaitymas.]</p></div>
+          </details>
+          <details>
+            <summary>Ar suteikiate garantiją atliktiems darbams?</summary>
+            <div class="answer"><p>[Čia įrašykite tikras garantijos sąlygas: terminą ir ką ji apima.]</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="kontaktai" aria-labelledby="kontaktai-title">
+      <div class="container">
+        <h2 id="kontaktai-title">Kontaktai</h2>
+        <p class="section-lead">Skambinkite arba parašykite. Visi šios demonstracinės svetainės kontaktai išgalvoti.</p>
+        <div class="contact-grid">
+          <div>
+            <!-- KEISTI: adresas, telefonas, el. paštas, žemėlapio nuoroda (query=...) -->
+            <ul class="contact-list">
+              <li>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pin"/></svg>
+                <div>
+                  <strong>Adresas</strong>
+                  <span class="plain">Pavyzdžio g. 1, Kaunas (išgalvotas adresas)</span>
+                  <a href="https://www.google.com/maps/search/?api=1&amp;query=Pavyzd%C5%BEio%20g.%201%2C%20Kaunas" target="_blank" rel="noopener noreferrer">Ieškoti žemėlapyje<span class="sr-only"> (atsidaro naujame lange)</span></a>
+                </div>
+              </li>
+              <li>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+                <div>
+                  <strong>Telefonas</strong>
+                  <a href="tel:+37060000000">+370 600 00000</a>
+                </div>
+              </li>
+              <li>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>
+                <div>
+                  <strong>El. paštas</strong>
+                  <a href="mailto:info@pavyzdys.example">info@pavyzdys.example</a>
+                </div>
+              </li>
+            </ul>
+
+            <div class="hours" id="darbo-laikas">
+              <h3>Darbo laikas</h3>
+              <div class="table-wrap">
+                <table>
+                  <caption class="sr-only">Darbo laikas pagal savaitės dienas</caption>
+                  <thead>
+                    <tr><th scope="col">Diena</th><th scope="col">Laikas</th></tr>
+                  </thead>
+                  <tbody>
+                    <!-- KEISTI: data-open ir data-close naudoja "Dabar atidaryta" ženklelis. Uždarytai dienai palikite tuščia. -->
+                    <tr data-day="1" data-open="08:00" data-close="17:00"><th scope="row">Pirmadienis</th><td>08:00 iki 17:00</td></tr>
+                    <tr data-day="2" data-open="08:00" data-close="17:00"><th scope="row">Antradienis</th><td>08:00 iki 17:00</td></tr>
+                    <tr data-day="3" data-open="08:00" data-close="17:00"><th scope="row">Trečiadienis</th><td>08:00 iki 17:00</td></tr>
+                    <tr data-day="4" data-open="08:00" data-close="17:00"><th scope="row">Ketvirtadienis</th><td>08:00 iki 17:00</td></tr>
+                    <tr data-day="5" data-open="08:00" data-close="17:00"><th scope="row">Penktadienis</th><td>08:00 iki 17:00</td></tr>
+                    <tr data-day="6" data-open="10:00" data-close="14:00"><th scope="row">Šeštadienis</th><td>10:00 iki 14:00</td></tr>
+                    <tr data-day="7" data-open="" data-close=""><th scope="row">Sekmadienis</th><td>Uždaryta</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h3>Užsakykite nemokamą įvertinimą</h3>
+            <p>Užpildykite formą, atsidarys jūsų el. pašto programa su paruoštu laišku. Telefonu atsakome greičiau.</p>
+            <!-- KEISTI: action="mailto:..." tikru el. paštu -->
+            <form id="uzklausa" action="mailto:info@pavyzdys.example" method="post" enctype="text/plain">
+              <div class="field">
+                <label for="vardas">Vardas</label>
+                <input id="vardas" name="vardas" data-label="Vardas" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="telefonas">Telefono numeris</label>
+                <input id="telefonas" name="telefonas" data-label="Telefonas" type="tel" inputmode="tel" autocomplete="tel" required>
+              </div>
+              <div class="field">
+                <label for="adresas">Objekto adresas <span class="opt">(nebūtina)</span></label>
+                <input id="adresas" name="adresas" data-label="Objekto adresas" type="text" autocomplete="off" placeholder="Gatvė, miestas">
+              </div>
+              <div class="field">
+                <label for="paslauga">Darbų rūšis</label>
+                <select id="paslauga" name="paslauga" data-label="Darbų rūšis">
+                  <option value="">Nežinau, reikia konsultacijos</option>
+                  <option>Butų remontas</option>
+                  <option>Apdaila</option>
+                  <option>Santechnika</option>
+                  <option>Elektros darbai</option>
+                  <option>Langų montavimas</option>
+                  <option>Nemokamas objekto įvertinimas</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="zinute">Žinutė <span class="opt">(nebūtina)</span></label>
+                <textarea id="zinute" name="zinute" data-label="Žinutė" rows="4" autocomplete="off"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">Parengti laišką</button>
+              <p class="form-msg" id="form-msg" role="status"></p>
+              <p class="form-note">Forma nesiunčia duomenų į jokį serverį. Laišką išsiunčiate patys iš savo pašto programos.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer on-dark">
+    <div class="container">
+      <p><strong>Pavyzdinė remonto ir apdailos įmonė (DEMO)</strong><br>Pavyzdžio g. 1, Kaunas. +370 600 00000. info@pavyzdys.example</p>
+      <div class="privacy" id="privatumas">
+        <h2>Privatumo pastaba</h2>
+        <!-- KEISTI: parašykite tikrą privatumo pranešimą. Tai tik vietos žymė, ne teisinis tekstas. -->
+        <p>Ši svetainė nenaudoja slapukų, analitikos ar kitų sekimo įrankių. Kontaktų forma tik atidaro jūsų el. pašto programą, o duomenys niekur nesiunčiami, kol patys neišsiunčiate laiško.</p>
+        <p>[Čia įrašykite duomenų valdytoją: įmonės pavadinimą, kodą, adresą, el. paštą, ir kiek laiko saugomi gauti laiškai.]</p>
+      </div>
+      <p class="legal">DEMO šablonas. Visi duomenys išgalvoti. <a class="top-link" href="#top">Į viršų</a></p>
+    </div>
+  </footer>
+
+  <div class="callbar">
+    <a class="btn btn-call" href="tel:+37060000000">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+      <span>Skambinti +370&nbsp;600&nbsp;00000</span>
+    </a>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
