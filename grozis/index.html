@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grožio salonas Kaune: šukuosenos, manikiūras, masažas | DEMO</title>
+  <meta name="description" content="DEMO svetainė: grožio salonas Kaune. Šukuosenos, manikiūras, veido priežiūra ir masažas, registracija pagal laiką ir aiškus kainoraštis.">
+  <meta name="theme-color" content="#4a1c3d">
+  <!-- KEISTI: kol tai DEMO, svetainė neindeksuojama. Realiam salonui ŠIĄ eilutę ištrinkite. -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- KEISTI: tikras domenas (canonical, og:url, og:image, JSON-LD, sitemap.xml, robots.txt) -->
+  <link rel="canonical" href="https://pavyzdys.example/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="lt_LT">
+  <meta property="og:site_name" content="Pavyzdinis grožio salonas (DEMO)">
+  <meta property="og:title" content="Grožio salonas Kaune: šukuosenos, manikiūras, masažas | DEMO">
+  <meta property="og:description" content="DEMO svetainė: šukuosenos, manikiūras, veido priežiūra ir masažas Kaune. Registracija pagal laiką ir aiškus kainoraštis.">
+  <meta property="og:url" content="https://pavyzdys.example/">
+  <meta property="og:image" content="https://pavyzdys.example/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pavyzdinis grožio salonas, DEMO svetainės šablonas">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="styles.css">
+  <!-- Be JavaScript: meniu rodomas visada, mygtukas ir lipni antraštė išjungti -->
+  <noscript><style>.nav{display:block!important;position:static!important;flex-basis:100%;box-shadow:none!important;padding:0 0 .75rem!important;border:0!important}.nav-toggle{display:none!important}.site-header{position:static!important}.bar{flex-wrap:wrap}</style></noscript>
+
+  <!-- KEISTI: visi duomenys žemiau išgalvoti. Pakeiskite tikrais, o "DEMO" iš pavadinimo pašalinkite. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BeautySalon",
+    "name": "Pavyzdinis grožio salonas (DEMO)",
+    "description": "DEMO svetainės šablonas. Išgalvotas salonas: šukuosenos, manikiūras, kosmetologė, masažas Kaune.",
+    "url": "https://pavyzdys.example/",
+    "image": "https://pavyzdys.example/og-image.png",
+    "telephone": "+370 600 00000",
+    "email": "info@pavyzdys.example",
+    "priceRange": "nuo X EUR",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Pavyzdžio g. 1",
+      "addressLocality": "Kaunas",
+      "postalCode": "00000",
+      "addressCountry": "LT"
+    },
+    "areaServed": { "@type": "City", "name": "Kaunas" },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "10:00", "closes": "19:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "16:00" }
+    ],
+    "makesOffer": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Šukuosenos" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Manikiūras" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Kosmetologės paslaugos" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Masažas" } }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Piktogramos (vienas šaltinis, naudojamos per use) -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.6 4.4-2.2 1.4a11 11 0 0 0 5.8 5.8l1.4-2.2 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13.5 6.5L19 12l-5.5 5.5"/></symbol>
+    <symbol id="i-scissors" viewBox="0 0 32 32"><circle cx="9" cy="23.5" r="4"/><circle cx="23" cy="23.5" r="4"/><path d="M11.8 20.6L24.5 4.5M20.2 20.6L7.5 4.5"/><circle cx="16" cy="14.4" r=".9"/></symbol>
+    <symbol id="i-polish" viewBox="0 0 32 32"><path d="M12.5 3.5h7v8.5h-7z"/><path d="M11 12h10l2.5 4v10.5a2.5 2.5 0 0 1-2.5 2.5H11a2.5 2.5 0 0 1-2.5-2.5V16z"/><path d="M12.5 19.5c2 1.3 5 1.3 7 0"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 32 32"><path d="M6 26C6 13 13.5 6 26.5 5.5 26.5 19 19 26 6 26z"/><path d="M6 26L18.5 13.5"/><path d="M12.5 19.5h5M15.5 16.5v-4"/></symbol>
+    <symbol id="i-stones" viewBox="0 0 32 32"><ellipse cx="16" cy="25" rx="11" ry="3.6"/><ellipse cx="16" cy="17.6" rx="7.6" ry="3"/><ellipse cx="16" cy="11.3" rx="4.6" ry="2.4"/><path d="M22.5 4.5c1.5 1.2 1.5 2.8 0 4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 14.5l2 2 4-4"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.5 12.3V4.5a1 1 0 0 1 1-1h7.8l8.2 8.2a1.4 1.4 0 0 1 0 2l-6.8 6.8a1.4 1.4 0 0 1-2 0z"/><circle cx="8" cy="8" r="1.4"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16a1 1 0 0 1 1 1v9.5a1 1 0 0 1-1 1h-9l-4.5 3.5V17H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1z"/><path d="M7.5 10h9M7.5 13h5.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-image" viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="3"/><circle cx="11.5" cy="12.5" r="2.5"/><path d="M4.5 23l7-6.5 5 4.5 4-3.5 7 5.5"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 32 32"><path d="M13 9c-4.5 1.5-7 5-7 10v4h7v-7H9.5c.3-2.8 1.8-4.8 4.3-5.8zM26 9c-4.5 1.5-7 5-7 10v4h7v-7h-3.5c.3-2.8 1.8-4.8 4.3-5.8z"/></symbol>
+    <symbol id="i-orn" viewBox="0 0 120 24"><path d="M4 12h38M78 12h38"/><path d="M60 3c-4 4-4 14 0 18 4-4 4-14 0-18z"/><path d="M50 12c3-4 7-4 10 0-3 4-7 4-10 0zM70 12c-3-4-7-4-10 0 3 4 7 4 10 0z"/><circle cx="44" cy="12" r="1.4"/><circle cx="76" cy="12" r="1.4"/></symbol>
+  </svg>
+
+  <a class="skip" href="#turinys">Pereiti prie turinio</a>
+
+  <aside class="ribbon" aria-label="Demonstracinė versija">
+    <div class="container">
+      <p><strong>DEMO</strong> <span>Pavyzdinė svetainė. Salonas, telefonas, adresas ir kainos yra išgalvoti.</span></p>
+    </div>
+  </aside>
+
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="#top">
+        <img src="favicon.svg" alt="" width="40" height="40">
+        <span class="brand-text">
+          <span class="brand-name">Pavyzdinis</span>
+          <span class="brand-sub">grožio salonas</span>
+        </span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Pagrindinė navigacija">
+        <ul>
+          <li><a href="#paslaugos">Paslaugos</a></li>
+          <li><a href="#kainorastis">Kainoraštis</a></li>
+          <li><a href="#galerija">Galerija</a></li>
+          <li><a href="#atsiliepimai">Atsiliepimai</a></li>
+          <li><a href="#duk">DUK</a></li>
+          <li><a href="#kontaktai">Kontaktai</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary header-cta" href="#registracija">Registruotis</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Meniu</button>
+    </div>
+  </header>
+
+  <main id="turinys">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span>Grožio salonas Kaune</p>
+          <!-- KEISTI: pagrindinis pažadas. Rašykite tik tai, ką salonas tikrai gali įvykdyti. -->
+          <h1 id="hero-title">Laikas sau, <em>be jokios skubos</em></h1>
+          <p class="lead">Šukuosenos, manikiūras, veido priežiūra ir atpalaiduojantis masažas vienoje vietoje. Registruojame pagal laiką, o pageidavimus ir kainą aptariame dar prieš procedūrą.</p>
+          <div class="cta">
+            <a class="btn btn-primary btn-lg" href="#registracija">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg>
+              <span>Registruotis vizitui</span>
+            </a>
+            <a class="btn btn-outline btn-lg" href="tel:+37060000000">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+              <span>+370&nbsp;600&nbsp;00000</span>
+            </a>
+          </div>
+          <p class="status" id="status" data-status aria-live="polite"></p>
+          <ul class="hero-facts">
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-clock"/></svg><span>Registracija pagal laiką</span></li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-tag"/></svg><span>Kainos žinomos iš anksto</span></li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chat"/></svg><span>Pokalbis prieš procedūrą</span></li>
+          </ul>
+        </div>
+        <div class="hero-art">
+          <img src="assets/hero.svg" width="560" height="600" alt="Iliustracija: arkos formos veidrodis, vaza su šakelėmis ir kosmetikos buteliukai ant lentynos">
+          <div class="hero-card" aria-hidden="true">
+            <p class="hero-card-title">Darbo laikas</p>
+            <p>Antr. iki penkt. <b>10:00 iki 19:00</b></p>
+            <p>Šeštadienį <b>10:00 iki 16:00</b></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="paslaugos" aria-labelledby="paslaugos-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Paslaugos</p>
+          <h2 id="paslaugos-title">Priežiūra, pritaikyta būtent jums</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+          <p class="section-lead">Pagrindinės salono paslaugos. Nematote, ko ieškote? Paskambinkite, pasakysime, ar galime padėti.</p>
+        </header>
+        <!-- KEISTI: paslaugų sąrašas pagal tai, ką salonas tikrai teikia -->
+        <div class="services">
+          <article class="service">
+            <div class="service-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-scissors"/></svg></div>
+            <h3>Šukuosenos</h3>
+            <p>Kirpimas, plaukų formavimas ir šukuosenos kasdienai ar progai. Pirmiausia aptariame pageidavimus ir plaukų būklę.</p>
+            <p class="service-price">nuo X EUR</p>
+          </article>
+          <article class="service">
+            <div class="service-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-polish"/></svg></div>
+            <h3>Manikiūras</h3>
+            <p>Nagų formavimas, odelių priežiūra ir lakavimas. Padėsime parinkti formą ir atspalvį pagal jūsų skonį.</p>
+            <p class="service-price">nuo X EUR</p>
+          </article>
+          <article class="service">
+            <div class="service-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-leaf"/></svg></div>
+            <h3>Kosmetologė</h3>
+            <p>Veido odos apžiūra ir priežiūros procedūros. Kosmetologė pasiūlo tai, kas tinka jūsų odos tipui.</p>
+            <!-- KEISTI: įrašykite tikras procedūras ir kosmetologės kvalifikaciją -->
+            <p class="service-price">nuo X EUR</p>
+          </article>
+          <article class="service">
+            <div class="service-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-stones"/></svg></div>
+            <h3>Masažas</h3>
+            <p>Atpalaiduojamasis masažas pagal susitarimą. Trukmę pasirenkate registruodamiesi. Tai ne gydomoji procedūra.</p>
+            <!-- KEISTI: patikslinkite masažo rūšis ir trukmes -->
+            <p class="service-price">nuo X EUR</p>
+          </article>
+        </div>
+        <p class="center-link"><a class="link-arrow" href="#kainorastis">Visas kainoraštis<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a></p>
+      </div>
+    </section>
+
+    <section class="section section-plum" id="vizitas" aria-labelledby="vizitas-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Kaip vyksta vizitas</p>
+          <h2 id="vizitas-title">Ramiai, aiškiai ir be netikėtumų</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+        </header>
+        <!-- KEISTI: įrašykite tikrus salono privalumus (patirtis, naudojamos priemonės, higiena) -->
+        <ol class="steps" role="list">
+          <li>
+            <h3>Registracija</h3>
+            <p>Paskambinkite arba palikite užklausą. Laiką suderiname iš anksto, todėl nereikia laukti eilėje.</p>
+          </li>
+          <li>
+            <h3>Pokalbis</h3>
+            <p>Išklausome pageidavimus, paaiškiname, kas bus daroma, ir pasakome kainą prieš pradėdami.</p>
+          </li>
+          <li>
+            <h3>Procedūra</h3>
+            <p>Darbo vietą ir įrankius paruošiame prieš kiekvieną klientą. Jūs tiesiog atsipalaiduojate.</p>
+          </li>
+          <li>
+            <h3>Patarimai namams</h3>
+            <p>Pasakome, kaip prižiūrėti rezultatą namuose, ir pasiūlome laiką kitam vizitui, jei reikia.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="kainorastis" aria-labelledby="kainorastis-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Kainoraštis</p>
+          <h2 id="kainorastis-title">Aiškios kainos be smulkaus šrifto</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+          <p class="section-lead">Orientacinės kainos. Galutinę kainą visada pasakome prieš procedūrą.</p>
+        </header>
+        <!-- KEISTI: X pakeiskite tikromis kainomis, o "apie X min." tikra trukme. Arba ištrinkite visą sekciją, jei kainų skelbti nenorima. -->
+        <div class="prices">
+          <div class="price-group">
+            <h3><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-scissors"/></svg>Šukuosenos</h3>
+            <ul class="price-list">
+              <li><span class="pl-name">Moteriškas kirpimas<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+              <li><span class="pl-name">Vyriškas kirpimas<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+              <li><span class="pl-name">Šukuosena progai<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+            </ul>
+          </div>
+          <div class="price-group">
+            <h3><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-polish"/></svg>Manikiūras</h3>
+            <ul class="price-list">
+              <li><span class="pl-name">Manikiūras<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+              <li><span class="pl-name">Manikiūras su lakavimu<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+            </ul>
+          </div>
+          <div class="price-group">
+            <h3><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-leaf"/></svg>Kosmetologė</h3>
+            <ul class="price-list">
+              <li><span class="pl-name">Veido priežiūros procedūra<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+              <li><span class="pl-name">Odos konsultacija<span class="pl-meta">apie X min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+            </ul>
+          </div>
+          <div class="price-group">
+            <h3><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-stones"/></svg>Masažas</h3>
+            <ul class="price-list">
+              <li><span class="pl-name">Atpalaiduojamasis masažas<span class="pl-meta">30 min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+              <li><span class="pl-name">Atpalaiduojamasis masažas<span class="pl-meta">60 min.</span></span><span class="pl-dots" aria-hidden="true"></span><span class="pl-price">nuo X EUR</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">X yra vieta tikrai kainai arba trukmei. Plaukų dažymo ir kitų procedūrų kaina priklauso nuo plaukų ilgio ir darbo apimties.</p>
+      </div>
+    </section>
+
+    <section class="section section-blush" id="galerija" aria-labelledby="galerija-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Galerija</p>
+          <h2 id="galerija-title">Salono erdvė ir darbai</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+          <p class="section-lead"><strong class="tag-inline">VIETA NUOTRAUKOMS</strong> Čia bus tikros salono ir darbų nuotraukos. Demonstracinėje versijoje nuotraukų nėra.</p>
+        </header>
+        <!-- KEISTI: kiekvieną .shot pakeiskite <img> su tikra nuotrauka (plotis, aukštis, alt). Klientų nuotraukas dėkite tik gavę sutikimą. -->
+        <div class="gallery">
+          <div class="shot shot-a"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><p class="shot-tag">VIETA NUOTRAUKAI</p><p class="shot-cap">[Salono interjeras]</p></div>
+          <div class="shot shot-b"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><p class="shot-tag">VIETA NUOTRAUKAI</p><p class="shot-cap">[Šukuosenos pavyzdys]</p></div>
+          <div class="shot shot-c"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><p class="shot-tag">VIETA NUOTRAUKAI</p><p class="shot-cap">[Manikiūro pavyzdys]</p></div>
+          <div class="shot shot-d"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><p class="shot-tag">VIETA NUOTRAUKAI</p><p class="shot-cap">[Kosmetologės kabinetas]</p></div>
+          <div class="shot shot-e"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><p class="shot-tag">VIETA NUOTRAUKAI</p><p class="shot-cap">[Masažo kambarys]</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="atsiliepimai" aria-labelledby="atsiliepimai-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Atsiliepimai</p>
+          <h2 id="atsiliepimai-title">Ką sako klientai</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+          <p class="section-lead">Demonstracinėje versijoje rodome tik vietas atsiliepimams. Išgalvotų atsiliepimų čia nėra ir nebus.</p>
+        </header>
+        <!-- KEISTI: dėkite tik tikrus atsiliepimus ir tik gavę kliento sutikimą. Jei jų nėra, ištrinkite visą sekciją ir nuorodą meniu. -->
+        <div class="reviews">
+          <div class="rv-card">
+            <svg class="icon review-q" aria-hidden="true" focusable="false"><use href="#i-quote"/></svg>
+            <p class="review-tag">VIETA ATSILIEPIMUI</p>
+            <p class="review-text">[Čia bus tikro kliento atsiliepimo tekstas]</p>
+            <p class="review-who">[Vardas, paslauga, data]</p>
+          </div>
+          <div class="rv-card">
+            <svg class="icon review-q" aria-hidden="true" focusable="false"><use href="#i-quote"/></svg>
+            <p class="review-tag">VIETA ATSILIEPIMUI</p>
+            <p class="review-text">[Čia bus tikro kliento atsiliepimo tekstas]</p>
+            <p class="review-who">[Vardas, paslauga, data]</p>
+          </div>
+          <div class="rv-card">
+            <svg class="icon review-q" aria-hidden="true" focusable="false"><use href="#i-quote"/></svg>
+            <p class="review-tag">VIETA ATSILIEPIMUI</p>
+            <p class="review-text">[Čia bus tikro kliento atsiliepimo tekstas]</p>
+            <p class="review-who">[Vardas, paslauga, data]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-blush" id="registracija" aria-labelledby="registracija-title">
+      <div class="container booking">
+        <div class="booking-info">
+          <p class="eyebrow">Registracija</p>
+          <h2 id="registracija-title">Užsisakykite vizitą jums patogiu laiku</h2>
+          <p>Užpildykite formą, ir atsidarys jūsų el. pašto programa su paruoštu laišku. Laiką patvirtiname telefonu ar laišku, kai suderiname su meistru.</p>
+          <ul class="booking-points">
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Forma nerezervuoja laiko automatiškai</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Data ir laikas yra tik pageidavimas</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>Greičiausia užsiregistruoti telefonu</li>
+          </ul>
+          <a class="btn btn-light btn-lg" href="tel:+37060000000">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+            <span>+370&nbsp;600&nbsp;00000</span>
+          </a>
+          <p class="booking-foot"><a class="link-arrow" href="#kontaktai">Darbo laikas ir adresas<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a></p>
+        </div>
+
+        <div class="form-card">
+          <h3>Registracijos užklausa</h3>
+          <!-- KEISTI: action="mailto:..." tikru el. paštu -->
+          <form id="uzklausa" action="mailto:info@pavyzdys.example" method="post" enctype="text/plain">
+            <div class="form-row">
+              <div class="field">
+                <label for="vardas">Vardas</label>
+                <input id="vardas" name="vardas" data-label="Vardas" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="telefonas">Telefono numeris</label>
+                <input id="telefonas" name="telefonas" data-label="Telefonas" type="tel" inputmode="tel" autocomplete="tel" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="paslauga">Paslauga</label>
+              <select id="paslauga" name="paslauga" data-label="Paslauga">
+                <option value="">Nežinau, patarkite</option>
+                <option>Šukuosenos</option>
+                <option>Manikiūras</option>
+                <option>Kosmetologė</option>
+                <option>Masažas</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="data">Pageidaujama data <span class="opt">(nebūtina)</span></label>
+                <input id="data" name="data" data-label="Pageidaujama data" type="date" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="laikas">Pageidaujamas laikas <span class="opt">(nebūtina)</span></label>
+                <select id="laikas" name="laikas" data-label="Pageidaujamas laikas">
+                  <option value="">Bet kuris</option>
+                  <option>Rytas (10:00 iki 12:00)</option>
+                  <option>Diena (12:00 iki 16:00)</option>
+                  <option>Vakaras (nuo 16:00)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="zinute">Žinutė <span class="opt">(nebūtina)</span></label>
+              <textarea id="zinute" name="zinute" data-label="Žinutė" rows="4" autocomplete="off"></textarea>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Parengti laišką</button>
+            <p class="form-msg" id="form-msg" role="status"></p>
+            <p class="form-note">Forma nesiunčia duomenų į jokį serverį. Laišką išsiunčiate patys iš savo pašto programos.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="duk" aria-labelledby="duk-title">
+      <div class="container narrow">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">DUK</p>
+          <h2 id="duk-title">Dažniausi klausimai</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+        </header>
+        <!-- KEISTI: atsakymus pritaikykite realiam salonui. Laužtiniai skliaustai žymi vietas, kur reikia tikros informacijos. -->
+        <div class="faq">
+          <details>
+            <summary>Ar reikia registruotis iš anksto?</summary>
+            <div class="answer"><p>Rekomenduojame. Paskambinkite arba palikite užklausą su pageidaujama data ir laiku, o laisvą laiką patvirtinsime. Jei yra laisvų vietų, galime priimti ir be registracijos.</p></div>
+          </details>
+          <details>
+            <summary>Ar forma yra tikra rezervacija?</summary>
+            <div class="answer"><p>Ne. Forma tik paruošia laišką su jūsų pageidavimais. Laikas laikomas užregistruotu tik tada, kai jį patvirtiname telefonu ar laišku.</p></div>
+          </details>
+          <details>
+            <summary>Kaip pakeisti ar atšaukti vizitą?</summary>
+            <div class="answer"><p>Paskambinkite ar parašykite kuo anksčiau, kad laiką galėtume pasiūlyti kitam klientui. [Čia įrašykite tikras atšaukimo sąlygas.]</p></div>
+          </details>
+          <details>
+            <summary>Kiek laiko trunka procedūra?</summary>
+            <div class="answer"><p>Trukmė priklauso nuo paslaugos. Tikslų laiką pasakome registruojant.</p></div>
+          </details>
+          <details>
+            <summary>Kokias priemones naudojate?</summary>
+            <div class="answer"><p>[Čia įrašykite tikrus gamintojus ir priemones. Rašykite tik tai, kas tiesa.]</p></div>
+          </details>
+          <details>
+            <summary>Kaip mokėti už paslaugas?</summary>
+            <div class="answer"><p>[Čia įrašykite tikrus apmokėjimo būdus: grynieji, kortelė, dovanų kuponai.]</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-ivory" id="kontaktai" aria-labelledby="kontaktai-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow eyebrow-center">Kontaktai</p>
+          <h2 id="kontaktai-title">Laukiame jūsų salone</h2>
+          <svg class="orn" aria-hidden="true" focusable="false"><use href="#i-orn"/></svg>
+          <p class="section-lead">Visi šios demonstracinės svetainės kontaktai išgalvoti.</p>
+        </header>
+        <div class="contact-grid">
+          <!-- KEISTI: adresas, telefonas, el. paštas, žemėlapio nuoroda (query=...) -->
+          <ul class="contact-list">
+            <li>
+              <span class="contact-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pin"/></svg></span>
+              <div>
+                <h3>Adresas</h3>
+                <p>Pavyzdžio g. 1, Kaunas <span class="muted">(išgalvotas adresas)</span></p>
+                <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Pavyzd%C5%BEio%20g.%201%2C%20Kaunas" target="_blank" rel="noopener noreferrer">Ieškoti žemėlapyje<span class="sr-only"> (atsidaro naujame lange)</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+              </div>
+            </li>
+            <li>
+              <span class="contact-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg></span>
+              <div>
+                <h3>Telefonas</h3>
+                <a class="contact-link" href="tel:+37060000000">+370 600 00000</a>
+              </div>
+            </li>
+            <li>
+              <span class="contact-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-mail"/></svg></span>
+              <div>
+                <h3>El. paštas</h3>
+                <a class="contact-link" href="mailto:info@pavyzdys.example">info@pavyzdys.example</a>
+              </div>
+            </li>
+          </ul>
+
+          <div class="hours" id="darbo-laikas">
+            <div class="hours-head">
+              <h3>Darbo laikas</h3>
+              <p class="status status-small" data-status></p>
+            </div>
+            <table>
+              <caption class="sr-only">Darbo laikas pagal savaitės dienas</caption>
+              <thead class="sr-only">
+                <tr><th scope="col">Diena</th><th scope="col">Laikas</th></tr>
+              </thead>
+              <tbody>
+                <!-- KEISTI: data-open ir data-close naudoja "Dabar atidaryta" ženklelis. Uždarytai dienai palikite tuščia. -->
+                <tr data-day="1" data-open="" data-close=""><th scope="row">Pirmadienis</th><td>Uždaryta</td></tr>
+                <tr data-day="2" data-open="10:00" data-close="19:00"><th scope="row">Antradienis</th><td>10:00 iki 19:00</td></tr>
+                <tr data-day="3" data-open="10:00" data-close="19:00"><th scope="row">Trečiadienis</th><td>10:00 iki 19:00</td></tr>
+                <tr data-day="4" data-open="10:00" data-close="19:00"><th scope="row">Ketvirtadienis</th><td>10:00 iki 19:00</td></tr>
+                <tr data-day="5" data-open="10:00" data-close="19:00"><th scope="row">Penktadienis</th><td>10:00 iki 19:00</td></tr>
+                <tr data-day="6" data-open="10:00" data-close="16:00"><th scope="row">Šeštadienis</th><td>10:00 iki 16:00</td></tr>
+                <tr data-day="7" data-open="" data-close=""><th scope="row">Sekmadienis</th><td>Uždaryta</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <p class="footer-name">Pavyzdinis grožio salonas <span>(DEMO)</span></p>
+        <p>Pavyzdžio g. 1, Kaunas<br>+370 600 00000<br>info@pavyzdys.example</p>
+      </div>
+      <div class="privacy" id="privatumas">
+        <h2>Privatumo pastaba</h2>
+        <!-- KEISTI: parašykite tikrą privatumo pranešimą. Tai tik vietos žymė, ne teisinis tekstas. -->
+        <p>Ši svetainė nenaudoja slapukų, analitikos ar kitų sekimo įrankių. Kontaktų forma tik atidaro jūsų el. pašto programą, o duomenys niekur nesiunčiami, kol patys neišsiunčiate laiško.</p>
+        <p>[Čia įrašykite duomenų valdytoją: salono pavadinimą, kodą, adresą, el. paštą, ir kiek laiko saugomi gauti laiškai.]</p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="legal">
+        <p>DEMO šablonas. Visi duomenys išgalvoti.</p>
+        <a class="top-link" href="#top">Į viršų</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="callbar">
+    <a class="btn btn-outline" href="tel:+37060000000">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg>
+      <span>Skambinti</span>
+    </a>
+    <a class="btn btn-primary" href="#registracija">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg>
+      <span>Registruotis</span>
+    </a>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
