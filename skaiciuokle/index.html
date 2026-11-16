@@ -34,7 +34,7 @@
 
   <main id="app" class="wrap app" tabindex="-1">
     <h1 class="sr-only">Remonto kainos skaičiuoklė</h1>
-    <noscript><p class="noscript">Skaičiuoklei reikia JavaScript. Įjunkite jį naršyklėje arba skambinkite mums.</p></noscript>
+    <noscript><p class="noscript">Skaičiuoklei reikia „JavaScript“. Įjunkite jį naršyklėje arba susisiekite su mumis: telefonas ir el. paštas yra puslapio apačioje.</p></noscript>
     <div class="progress-area" id="progressArea" hidden>
       <div class="progress-top">
         <p class="progress-label" id="progressLabel">Žingsnis 1 iš 9</p>
@@ -83,7 +83,7 @@
       </div>
       <div class="info-card soft">
         <h3>Kaip skaityti rezultatą</h3>
-        <p>Intervalas "nuo ir iki" rodo tikėtiną ribą. "Apie" yra vidutinis scenarijus. Kuo daugiau atsakymų patikslinate, tuo siauresnis intervalas.</p>
+        <p>Intervalas „nuo ... iki“ rodo tikėtiną ribą. „Apie“ yra vidutinis scenarijus. Kuo daugiau atsakymų patikslinate, tuo siauresnis intervalas.</p>
         <p>Tai preliminarus įvertis, ne pasiūlymas. Tikslią kainą parodo sąmata po apžiūros.</p>
       </div>
     </div>
@@ -95,9 +95,13 @@
   </section>
 
   <section class="wrap info" id="prielaidos" aria-labelledby="prielaidos-h">
-    <h2 id="prielaidos-h">Prielaidos ir apribojimai</h2>
-    <p class="lead-s">Šie dalykai yra mūsų prielaidos, ne patikrinti faktai. Juos turi peržiūrėti skaičiuoklę naudojanti įmonė.</p>
-    <ul class="assume" id="assumeList"></ul>
+    <details class="sources assume-box">
+      <summary><span><span id="prielaidos-h" class="sum-h">Prielaidos ir apribojimai</span><span class="sum-s" id="assumeCount">Mūsų prielaidos, ne patikrinti faktai</span></span></summary>
+      <div>
+        <p class="lead-s">Šie dalykai yra mūsų prielaidos, ne patikrinti faktai. Juos turi peržiūrėti skaičiuoklę naudojanti įmonė.</p>
+        <ul class="assume" id="assumeList"></ul>
+      </div>
+    </details>
   </section>
 
   <footer class="site-footer">

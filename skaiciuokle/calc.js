@@ -47,41 +47,108 @@
     4: [["living_kitchen", 0.24], ["bedroom", 0.17], ["room", 0.13], ["room", 0.13], ["bath", 0.08], ["hall", 0.25]]
   };
 
-  // ---------- 2.4 medžiagos (kainos su PVM iš JSON, perskaičiuojamos be PVM) ----------
+  // ---------- 2.4 medžiagos ----------
+  // Vienas skaičiavimo pagrindas: kaina BE PVM (laukas net, tyrime price_be_pvm). PVM pridedamas tik pabaigoje.
+  // Kainos neįrašytos ranka: syncPrices() jas paima iš data.js pagal TIER_SRC ir SINGLE.ref.
+  // tierOf: susieta medžiaga, kurios klasę lemia kita (matoma) medžiaga. Sąsajoje atskirai nerodoma.
   var MATERIALS = {
-    paint: { label: "Sienų ir lubų dažai", unit: "l", ref: "m08", tiers: [
-      { example: "Color Plus 7, 10 l", price: 1.40 }, { example: "Topcolor Premium 7, 10 l", price: 4.00 }, { example: "Sadolin Easycare, 9 l", price: 7.00 }] },
-    floor_laminate: { label: "Laminatas", unit: "m2", ref: "m01", tiers: [
-      { example: "7,5-8 mm, AC4", price: 6.49 }, { example: "8-10 mm, AC4-AC5", price: 9.99 }, { example: "10-12 mm, AC5", price: 16.99 }] },
-    floor_vinyl: { label: "Vinilas, SPC", unit: "m2", ref: "m02", tiers: [
-      { example: "SPC click, 4 mm", price: 13.49 }, { example: "SPC click, 4 mm, tankesnis", price: 17.99 }, { example: "Dizaino vinilas", price: 34.99 }] },
-    floor_parquet: { label: "Parketlentės", unit: "m2", ref: "m03", tiers: [
-      { example: "Ąžuolo, paprastesnė", price: 43 }, { example: "Ąžuolo, vidutinė", price: 50 }, { example: "Ąžuolo, aukštesnė", price: 81 }] },
-    tile: { label: "Plytelės", unit: "m2", ref: "m04", refs: ["m04", "m04", "m05"], tiers: [
-      { example: "Akmens masės plytelės", price: 8.19 }, { example: "Akmens masės plytelės", price: 11.99 }, { example: "Dizaino plytelės", price: 35 }] },
-    door_leaf: { label: "Vidaus durų varčia", unit: "vnt.", ref: "m12", tiers: [
-      { example: "Paprasta varčia", price: 52.99 }, { example: "Vidutinė varčia", price: 67.99 }, { example: "Aukštesnės klasės varčia", price: 130 }] },
-    wc: { label: "Klozetas", unit: "vnt.", ref: "m14", refs: ["m14", "m15", "m15"], tiers: [
-      { example: "Pastatomas klozetas", price: 87.90 }, { example: "Potinkinis rėmas ir klozetas", price: 299 }, { example: "Aukštesnis komplektas", price: 519 }] },
-    shower: { label: "Dušo kabina ar stiklas", unit: "vnt.", ref: "m16", tiers: [
-      { example: "Dušo kabina", price: 430 }, { example: "Dušo stiklas", price: 650 }, { example: "Aukštesnės klasės stiklas", price: 1000 }] },
-    vanity: { label: "Praustuvas su spintele", unit: "kompl.", ref: "m17", tiers: [
-      { example: "Paprasta spintelė", price: 250 }, { example: "Vidutinė spintelė", price: 350 }, { example: "Aukštesnės klasės", price: 500 }] },
-    sockets: { label: "Rozetės ir jungikliai", unit: "vnt.", ref: "m19", tiers: [
-      { example: "Paprasta serija", price: 2.49 }, { example: "Vidutinė serija", price: 3.59 }, { example: "Aukštesnė serija", price: 6.29 }] },
-    radiator: { label: "Plieniniai radiatoriai", unit: "vnt.", ref: "h02", tiers: [
-      { example: "22 tipas, mažesnis", price: 51.95 }, { example: "22 tipas, vidutinis", price: 69.95 }, { example: "22 tipas, didesnis", price: 87.90 }] },
-    gkp: { label: "Gipso kartonas 12,5 mm", unit: "m2", ref: "m09", tiers: [
-      { example: "Standartinis", price: 2.44 }, { example: "Drėgmei atsparus", price: 3.22 }, { example: "Akustinis", price: 4.88 }] }
+    paint: { label: "Sienų dažai", unit: "l", ex: ["Color Plus 7, Pentacolor Silver Shield", "Topcolor Premium 7, Vivacolor Wall 7", "Sadolin Easycare, Tikkurila Luja 7"] },
+    paint_ceiling: { label: "Lubų dažai", unit: "l", tierOf: "paint", ex: ["Primacol Classica", "Color Plius Mat", "Topcolor Premium Ultra Mat"] },
+    primer: { label: "Giluminis gruntas", unit: "l", tierOf: "paint", ex: ["Pigiausias 5 l", "Amigrunt", "Mitto G430"] },
+    wallpaper: { label: "Tapetai (flizelino pagrindu)", unit: "m2", ex: ["Ecodeco", "Rasch", "Zambaiti"] },
+    floor_laminate: { label: "Laminatas", unit: "m2", ex: ["8 mm; Kronostep K461", "8-10 mm; Domoletti D3181", "10-12 mm; Kronotex Mammut"] },
+    floor_vinyl: { label: "Vinilas, SPC", unit: "m2", ex: ["Okko, 3,5 mm", "Domoletti Premium Long, 5,5 mm", "Salag SPC, 5 mm"] },
+    floor_parquet: { label: "Parketlentės", unit: "m2", ex: ["Pigesnės (10 proc. riba)", "Vidutinė kaina (mediana)", "Brangesnės (90 proc. riba)"] },
+    skirting: { label: "Grindjuostės", unit: "m", ex: ["Dollken SLK 50", "Dollken SLK 60", "Korner Venezia PVC"] },
+    tile: { label: "Grindų plytelės", unit: "m2", ex: ["Akmens masė; Cersanit Huston", "Akmens masė; Stn Belevue 60x60", "Akmens masė; Geotiles 120x60"] },
+    tile_wall: { label: "Sienų plytelės (vonia)", unit: "m2", ex: ["Keramika; Cersanit Huston", "Keramika; Stn Belevue", "Keramika; Geotiles Marvet"] },
+    door_leaf: { label: "Vidaus durų varčia", unit: "vnt.", ex: ["Voster Full", "Voster Vinci 50", "Marchetti Napoleon (masyvas)"] },
+    door_handle: { label: "Durų rankena", unit: "vnt.", tierOf: "door_leaf", ex: ["Inovo 2/006", "Inovo Mia", "Inovo Unico"] },
+    door_hinge: { label: "Durų vyriai", unit: "vnt.", tierOf: "door_leaf", ex: ["MS/H-80", "Amig", "Amig"] },
+    wc: { label: "Klozetas", unit: "vnt.", ex: ["Pastatomas klozetas", "Potinkinis rėmas ir klozetas", "Aukštesnis komplektas"] },
+    shower: { label: "Dušo kabina", unit: "vnt.", ex: ["Deante Funkia, Thema Lux Sand", "Roth, Thema Lux Aris", "Harmony Diamond, Thema Lux Korfu"] },
+    vanity: { label: "Praustuvas su spintele", unit: "kompl.", ex: ["Defra Mea D65", "Elita Nika 55", "ARSAN Spirit 800"] },
+    faucet: { label: "Praustuvo maišytuvas", unit: "vnt.", ex: ["Classicline Rundo", "Rubineta Kapri-18", "Aukštesnės klasės kainos nėra"] },
+    faucet_shower: { label: "Dušo ar vonios maišytuvas", unit: "vnt.", tierOf: "faucet", ex: ["Deante Joko, Thema Lux Wanda, Ravak Penta", "Herz Infinity, Thema Lux Spi, Rubineta Optima", "Vento komplektas, Hansgrohe Logis"] },
+    sockets: { label: "Rozetės", unit: "vnt.", ex: ["Paprasta serija", "Vidutinė serija", "Aukštesnė serija"] },
+    switches: { label: "Jungikliai", unit: "vnt.", tierOf: "sockets", ex: ["Vilma", "Orro", "Liregus"] },
+    panel: { label: "Elektros skydelis (12 mod., aukšt. 36 mod.)", unit: "vnt.", tierOf: "sockets", ex: ["Mirsa M4092", "Schneider Mini Pragma", "Hager 36 mod."] },
+    breakers: { label: "Automatiniai išjungikliai 1P", unit: "vnt.", tierOf: "sockets", ex: ["Shcet", "Legrand", "Hager"] },
+    lights: { label: "Lubiniai šviestuvai", unit: "vnt.", ex: ["Tope, Tope Timor", "Philips", "Globo, Trio Cinto"] },
+    lights_panel: { label: "Įleidžiamos LED panelės", unit: "vnt.", tierOf: "lights", ex: ["Pigiausia panelė", "Philips Meson 12,5 W", "Philips Meson 23,5 W"] },
+    radiator: { label: "Plieniniai radiatoriai", unit: "vnt.", ex: ["22 tipas, mažesnis", "22 tipas, vidutinis", "22 tipas, didesnis"] },
+    gkp: { label: "Gipso kartonas 12,5 mm", unit: "m2", ex: ["Standartinis", "Drėgmei atsparus", "Akustinis"] }
   };
+  // Šaltiniai pagal klasę: [ekonominė, vidutinė, aukštesnė], kiekviena yra sąrašas [kodas, indeksas].
+  // Kai klasė turi kelis šaltinius (pvz. Moki-Veži ir Senukai), imamas jų kainų be PVM vidurkis.
+  // Į vidurkį imami tik A ar B patikimumo šaltiniai. C šaltinis naudojamas tik tada, kai stipresnio nėra.
+  // Taip apskaičiuoti Ermitažo (c08, c09) ir ARSAN "nuo" (c11) kainos lieka tik informacijai.
+  var T3 = function (list) { return [0, 1, 2].map(function (i) { return list.map(function (c) { return [c, i]; }); }); };
+  var TIER_SRC = {
+    paint: T3(["m08", "c01"]), paint_ceiling: T3(["n02"]), primer: T3(["n03"]), wallpaper: T3(["n05"]),
+    floor_laminate: T3(["m01", "c02", "c09"]), floor_vinyl: T3(["m02", "c03", "c08"]), floor_parquet: T3(["n08"]), skirting: T3(["n36"]),
+    tile: T3(["n10", "c04"]), tile_wall: T3(["n09", "c04"]),
+    door_leaf: T3(["n18"]), door_handle: T3(["n19"]), door_hinge: T3(["n20"]),
+    wc: [[["n25", 0]], [["m15", 1]], [["m15", 2]]], shower: T3(["n29", "c06", "c11"]), vanity: T3(["n28"]),
+    faucet: T3(["n22"]), faucet_shower: T3(["n23", "c05", "c12"]),
+    sockets: T3(["m19"]), switches: T3(["n42"]), panel: T3(["n37"]), breakers: T3(["n38"]),
+    lights: T3(["n44", "c07"]), lights_panel: T3(["n43"]),
+    radiator: T3(["h02"]), gkp: T3(["m09"])
+  };
+  // Viena kaina (vid.). per: pakuotės dydis, kai kaina už pakuotę. idx: kuris klasės laukas (numatytas 1 = vid.).
   var SINGLE = {
-    putty: { label: "Glaistas (Weber LR+, 20 kg)", unit: "kg", price: 0.66, ref: "m11" },
-    leveling: { label: "Savaime išsilyginantis mišinys (Mira 6700)", unit: "kg", price: 0.64, ref: "m10" },
-    door_frame: { label: "Durų staktos komplektas", unit: "vnt.", price: 79.99, ref: "m13" },
-    cable: { label: "Kabelis NYM 3x1,5", unit: "m", price: 1.00, ref: "m18", perPoint: 8 },
-    adhesive: { label: "Plytelių klijai, 25 kg", unit: "maiš.", price: 11.99, ref: "m06" },
-    grout: { label: "Fuga, 2 kg", unit: "pak.", price: 5.89, ref: "m07" }
+    putty: { label: "Glaistas (Weber LR+, 20 kg)", unit: "kg", ref: "m11", per: 20 },
+    leveling: { label: "Savaime išsilyginantis mišinys (Mira 6700)", unit: "kg", ref: "m10", per: 25 },
+    door_frame: { label: "Durų staktos komplektas", unit: "vnt.", ref: "m13" },
+    cable15: { label: "Kabelis NYM-J 3x1,5 (apšvietimas)", unit: "m", ref: "n39", perPoint: 8 },
+    cable25: { label: "Kabelis NYM-J 3x2,5 (rozetės)", unit: "m", ref: "n40", perPoint: 8 },
+    adhesive: { label: "Plytelių klijai, 25 kg", unit: "maiš.", ref: "m06" },
+    grout: { label: "Fuga, 2 kg", unit: "pak.", ref: "n12" },
+    waterproof: { label: "Hidroizoliacija, skystoji plėvelė", unit: "m2", ref: "n13" },
+    wp_tape: { label: "Hidroizoliacinė juosta", unit: "m", ref: "n14" },
+    pipe: { label: "PPR vamzdis d20", unit: "m", ref: "n32" },
+    pipe_fit: { label: "PPR jungtys", unit: "vnt.", ref: "n34" },
+    pipe_drain: { label: "Nuotekų vamzdis", unit: "m", ref: "n35" },
+    plaster: { label: "Tinkavimo medžiagos (modelio įvertis)", unit: "m2", ref: "x01" },
+    profile_cd: { label: "Profilis CD 60/27, 3 m", unit: "vnt.", ref: "n16" },
+    profile_ud: { label: "Profilis UD 28/27, 4 m (ekon. kaina)", unit: "vnt.", ref: "n17", idx: 0 } // vidutinės kainos šaltinyje nėra
   };
+  // Normos, kurių šaltinis neduoda (prielaidos, aprašytos README ir ATASKAITA-QA): kiekiai vienam vienetui.
+  var NORM = { primerLM2: 0.15, wallpaperWaste: 0.10, skirtingWaste: 0.07, gkpWaste: 0.10, cdSpacingM: 0.6, cdLenM: 3, udLenM: 4,
+    wpTapePerShowerM: 4, pipeMPerPoint: 8, fitPerPoint: 8, drainMPerPoint: 2, hingesPerDoor: 3, breakersBase: 4, breakersPerRoom: 2 };
+
+  var RANK = { A: 3, B: 2, C: 1, N: 0 };
+  function tierPrice(P, refs) {
+    var c = refs.map(function (s) { var it = P.items[s[0]]; var v = it && it.net ? it.net[s[1]] : null; return (typeof v === "number" && isFinite(v)) ? { code: s[0], v: v, conf: it.conf || "N" } : null; }).filter(Boolean);
+    if (!c.length) return null;
+    var strong = c.filter(function (x) { return RANK[x.conf] >= 2; }), use = strong.length ? strong : c;
+    var minConf = use.reduce(function (m, x) { return RANK[x.conf] < RANK[m] ? x.conf : m; }, "A");
+    return { net: use.reduce(function (s, x) { return s + x.v; }, 0) / use.length, refs: use.map(function (x) { return x.code; }), conf: minConf };
+  }
+  var synced = null;
+  // Medžiagų kainas paima iš kainų duomenų, kad JSON pakeitimas pasiektų ir variklį, ir sąsają.
+  // Trūkstama klasė užpildoma artimiausia esama (pirmiausia vidutine) ir pažymima missing.
+  function syncPrices(P) {
+    if (!P || !P.items || synced === P) return;
+    Object.keys(TIER_SRC).forEach(function (k) {
+      var m = MATERIALS[k], got = TIER_SRC[k].map(function (refs) { return tierPrice(P, refs); });
+      m.tiers = [0, 1, 2].map(function (i) {
+        var t = got[i], missing = false;
+        if (!t) { missing = true; t = got[1] || got[i === 0 ? 2 : 0] || got[i === 2 ? 0 : 2]; }
+        if (!t) throw new Error("Nėra kainos medžiagai " + k);
+        return { example: m.ex[i], net: t.net, refs: t.refs, ref: t.refs[0], conf: missing ? "C" : t.conf, missing: missing };
+      });
+      m.ref = m.tiers[1].ref;
+    });
+    Object.keys(SINGLE).forEach(function (k) {
+      var s = SINGLE[k], it = P.items[s.ref]; if (!it) throw new Error("Nėra kainos " + s.ref);
+      var v = it.net[s.idx == null ? 1 : s.idx];
+      if (typeof v !== "number" || !isFinite(v)) throw new Error("Nėra vid. kainos " + s.ref);
+      s.net = v / (s.per || 1); s.conf = it.conf;
+    });
+    synced = P;
+  }
+  function confOf(P, ref) { var it = P && P.items && P.items[ref]; return it ? it.conf : null; }
 
   var GROUPS = [
     { id: "prep", label: "Paruošimas ir griovimas" },
@@ -100,17 +167,21 @@
     { id: "w_strip", group: "prep", label: "Senų dangų, dažų ar tapetų nuėmimas", def: ["partial", "standard", "full", "luxury"] },
     { id: "w_demo", group: "prep", label: "Griovimas (pertvaros, plytelės)", def: ["standard", "full", "luxury"] },
     { id: "w_waste", group: "prep", label: "Atliekų išvežimas", def: ["partial", "standard", "full", "luxury"] },
-    { id: "w_plaster", group: "walls", label: "Sienų tinkavimas", def: ["standard", "full", "luxury"], cond: "plaster" },
+    // Pasirenkami paketai (savininko sprendimas 2026-11-16): lygių apibrėžimai nekeičiami,
+    // pagal nutylėjimą įjungti pilnam ir prabangiam, išjungti daliniam ir standartiniam.
+    // Standartiniam tinkavimas lieka "pagal būklę", kaip buvo (03 metodika): labai nelygios sienos, bloga būklė, nauja statyba.
+    { id: "w_plaster", group: "walls", pkg: true, label: "Sienų tinkavimas ir lyginimas", def: ["full", "luxury"], desc: "Tinkas ir lyginimas visoms sienoms. Kartu su sausu lyginimu tinkuojamos tik vonia, virtuvė ir koridorius." },
+    { id: "w_drywall", group: "walls", pkg: true, label: "Sausas lyginimas (gipso kartonas)", def: ["full", "luxury"], desc: "Sienos apkalamos gipso kartonu ant profilių. Kartu su tinkavimu: kambariuose vietoj tinko." },
     { id: "w_putty", group: "walls", label: "Sienų ir lubų lyginimas glaistu", term: "glaistymas", def: ["partial", "standard", "full", "luxury"] },
     { id: "w_paint", group: "walls", label: "Gruntavimas ir dažymas", term: "gruntavimas", def: ["partial", "standard", "full", "luxury"] },
-    { id: "w_wallpaper", group: "walls", label: "Tapetai (vietoje sienų dažymo)", def: [], note: "Tapetų kainos šaltinio nėra, skaičiuojamas tik darbas." },
+    { id: "w_wallpaper", group: "walls", label: "Tapetai (vietoj sienų dažymo)", def: [], note: "Tapetų klijų kainos šaltinio nėra." },
     { id: "w_shadow", group: "walls", label: "Šešėlinės siūlės", term: "seseline", def: ["luxury"] },
     { id: "w_screed", group: "floors", label: "Grindų išlyginimas", term: "islyginamasis", def: ["full", "luxury"], cond: "screed" },
     { id: "w_floor", group: "floors", label: "Grindų danga (laminatas, vinilas, parketlentės, plytelės)", def: ["partial", "standard", "full", "luxury"] },
-    { id: "w_skirting", group: "floors", label: "Grindjuostės", def: ["partial", "standard", "full", "luxury"], note: "Grindjuosčių medžiagos kainos šaltinio nėra." },
-    { id: "w_underfloor", group: "floors", label: "Šildomos grindys (vonia, virtuvė, koridorius)", def: ["luxury"], note: "Šildymo kilimėlių kainos šaltinio nėra, skaičiuojamas darbas." },
+    { id: "w_skirting", group: "floors", label: "Grindjuostės", def: ["partial", "standard", "full", "luxury"] },
+    { id: "w_underfloor", group: "floors", label: "Šildomos grindys (vonia, virtuvė, koridorius)", def: ["luxury"], note: "Šildymo kilimėlių kainos šaltinio nėra, skaičiuojamas tik darbas." },
     { id: "w_bath_tile", group: "bath", label: "Plytelės sienoms ir grindims", def: ["standard", "full", "luxury"], cond: "wet" },
-    { id: "w_waterproof", group: "bath", label: "Hidroizoliacija", term: "hidroizoliacija", def: ["standard", "full", "luxury"], cond: "wet", note: "Hidroizoliacijos medžiagos kainos nėra." },
+    { id: "w_waterproof", group: "bath", label: "Hidroizoliacija", term: "hidroizoliacija", def: ["standard", "full", "luxury"], cond: "wet" },
     { id: "w_drain", group: "bath", label: "Dušo trapas ir nuolydis", def: ["standard", "full", "luxury"], cond: "bath" },
     { id: "w_wc", group: "bath", label: "Klozetas", term: "potinkinis", def: ["standard", "full", "luxury"], cond: "wc" },
     { id: "w_shower", group: "bath", label: "Dušas ar vonia", def: ["standard", "full", "luxury"], cond: "bath" },
@@ -119,9 +190,8 @@
     { id: "w_sills", group: "doors", label: "Palangės", def: ["full", "luxury"], cond: "windows" },
     { id: "w_reveals", group: "doors", label: "Angokraščių formavimas", def: ["full", "luxury"] },
     { id: "w_windows", group: "doors", label: "Langų keitimas", def: [], noPrice: true, note: "Kainą nurodysime po apžiūros. Į sumą neįtraukta." },
-    { id: "w_el_full", group: "electric", label: "Visa elektros instaliacija", def: ["full", "luxury"], notSingle: true },
+    { id: "w_el_full", group: "electric", pkg: true, label: "Pilna elektros instaliacija su skydeliu", def: ["full", "luxury"], notSingle: true, desc: "Nauji laidai, rozetės, jungikliai, skydelis ir automatiniai išjungikliai. Atskiri taškai tada neskaičiuojami." },
     { id: "w_el_points", group: "electric", label: "Atskiri nauji taškai", def: ["standard"], singleDef: ["standard", "full", "luxury"], qty: "el_points", qtyLabel: "Kiek naujų elektros taškų?" },
-    { id: "w_el_panel", group: "electric", label: "Elektros skydelis", def: ["full", "luxury"], notSingle: true },
     { id: "w_lights", group: "electric", label: "Šviestuvų montavimas", def: ["standard", "full", "luxury"], qty: "lights", qtyLabel: "Kiek šviestuvų?" },
     { id: "w_pl_full", group: "plumb", label: "Visa santechnikos instaliacija", def: ["full", "luxury"], notSingle: true },
     { id: "w_pl_points", group: "plumb", label: "Atskiri nauji taškai", def: ["standard"], singleDef: ["standard", "full", "luxury"], qty: "pl_points", qtyLabel: "Kiek santechnikos taškų?", cond: "plpoints" },
@@ -134,7 +204,6 @@
   // ---------- pagalbinės ----------
   function num(v, d) { var n = typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")); return isFinite(n) ? n : d; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-  function net(p) { return p / 1.21; } // mažmenos kaina su PVM -> be PVM
   function roundStep(v) { var s = Math.abs(v) < 10000 ? C.rounding.under10000 : C.rounding.from10000; return Math.round(v / s) * s; }
   function prices(P, id) {
     var it = P.items[id]; if (!it) throw new Error("Nėra kainos " + id);
@@ -182,7 +251,7 @@
   // 2.5 kiekių išvedimas
   function quantities(a, rooms) {
     var H = height(a), G = C.geo;
-    var q = { floor: 0, walls: 0, perimeter: 0, skirting: 0, bathTile: 0, waterproof: 0, windows: 0, zoneDry: 0, zoneWet: 0, zoneBathFloor: 0, wetRooms: 0, wetFloor: 0 };
+    var q = { floor: 0, walls: 0, wallsDry: 0, perimeter: 0, wetPerimeter: 0, skirting: 0, bathTile: 0, bathTileWalls: 0, waterproof: 0, windows: 0, zoneDry: 0, zoneWet: 0, zoneBathFloor: 0, wetRooms: 0, wetFloor: 0, roomCount: rooms.length };
     rooms.forEach(function (r) {
       var t = ROOM_TYPES[r.type] || ROOM_TYPES.room;
       var A = Math.max(0, num(r.area, 0));
@@ -197,13 +266,17 @@
       q.skirting += Math.max(0, P - drs * G.doorWidthM);
       if (r.wet) {
         var tileH = a.tileHeight === "ceiling" ? H : G.bathTileH;
-        q.bathTile += Math.max(0, P * tileH - wOpen - dOpen) + A;
-        q.waterproof += A + P * G.waterproofSkirtH + G.showerZoneM2;
-        q.wetRooms += 1; q.zoneBathFloor += A;
+        var tw = Math.min(wallsNet, Math.max(0, P * tileH - wOpen - dOpen));
+        q.bathTile += tw + A; q.bathTileWalls += tw;
+        q.waterproof += A + P * G.waterproofSkirtH;
+        q.wetRooms += 1; q.zoneBathFloor += A; q.wetPerimeter += P;
       } else if (t.zone === "wet") q.zoneWet += A;
-      else q.zoneDry += A;
+      else { q.zoneDry += A; q.wallsDry += wallsNet; }
     });
     var n = roomsCount(a), baths = bathsCount(a);
+    // Dušo zona (8 m2, prielaida) tik patalpoms su dušu ar vonia: "Nėra (tik WC)" jos neturi.
+    q.showerZones = Math.min(q.wetRooms, baths);
+    q.waterproof += q.showerZones * G.showerZoneM2;
     var single = a.type === "room";
     var kind = a.roomKind;
     var dq = single ? {
@@ -213,7 +286,7 @@
     } : {
       el_points: 6 + 3 * n,
       pl_points: 2 * baths + 2,
-      doors: n + baths + 1,
+      doors: n + Math.max(baths, wcCount(a)) + 1, // "Nėra (tik WC)": WC patalpa irgi turi duris
       radiators: n + 1,
       lights: n * 2 + baths + 2
     };
@@ -228,9 +301,9 @@
     return q;
   }
 
+  function plasterByState(a) { return a.walls === "very" || a.state === "bad" || a.state === "shell" || a.age === "new"; }
   function condOk(w, a, q) {
     switch (w.cond) {
-      case "plaster": return a.walls === "very" || a.state === "bad" || a.state === "shell" || a.age === "new";
       case "screed": return a.state !== "good";
       case "wet": return q.wetRooms > 0;
       case "bath": return q.baths > 0;
@@ -251,6 +324,8 @@
       if (w.id === "w_strip" && (a.state === "good" || a.state === "shell")) on = false;
       if (w.id === "w_demo" && lv === "standard") on = q.wetRooms > 0 && a.state !== "shell"; // standartinis: griovimas "pagal vonią" (03, 3 sk.), dalis 0,10
       if (w.id === "w_screed" && lv === "standard") on = a.state === "bad" || a.state === "shell";
+      if (w.id === "w_plaster" && lv === "standard") on = plasterByState(a); // standartinio lygio apibrėžimas nekeistas
+      if (w.id === "w_plaster" && (lv === "full" || lv === "luxury")) on = true;
       if (w.id === "w_design" && a.plan === "want") on = true;
       if (!condOk(w, a, q)) on = false;
       out[w.id] = on;
@@ -264,11 +339,12 @@
   }
 
   // Medžiagos kaina: { low, mid, high } be PVM pagal pasirinktą lygį (0 = nežinau: mid vidutinė, low ekonominė, high aukštesnė)
+  function tierOfKey(key, a) { var mk = MATERIALS[key].tierOf || key; var t = (a.mat && a.mat[mk] != null) ? +a.mat[mk] : 2; return [0, 1, 2, 3].indexOf(t) >= 0 ? t : 2; }
   function tierCost(key, a, qty) {
-    var m = MATERIALS[key], t = (a.mat && a.mat[key] != null) ? a.mat[key] : 2;
-    var p = m.tiers.map(function (x) { return net(x.price); });
-    if (t === 0) return { low: p[0] * qty, mid: p[1] * qty, high: p[2] * qty, tier: 0, unitPrice: m.tiers[1].price };
-    var v = p[t - 1] * qty; return { low: v, mid: v, high: v, tier: t, unitPrice: m.tiers[t - 1].price };
+    var m = MATERIALS[key], t = tierOfKey(key, a);
+    var p = m.tiers.map(function (x) { return x.net; });
+    if (t === 0) return { low: p[0] * qty, mid: p[1] * qty, high: p[2] * qty, tier: 0, unitNet: p[1], tierObj: m.tiers[1] };
+    var v = p[t - 1] * qty; return { low: v, mid: v, high: v, tier: t, unitNet: p[t - 1], tierObj: m.tiers[t - 1] };
   }
   function fixed(v) { return { low: v, mid: v, high: v }; }
   function addM(x, y) { return { low: x.low + y.low, mid: x.mid + y.mid, high: x.high + y.high }; }
@@ -276,6 +352,7 @@
   // ---------- 5.1 pagrindinis skaičiavimas ----------
   function calculate(a, P, cfg) {
     P = P || g.KAINOS; cfg = cfg || g.CALC_CONFIG || {};
+    syncPrices(P);
     var level = C.levels[a.level] ? a.level : "standard";
     var lv = C.levels[level];
     var regions = cfg.regions || [];
@@ -298,11 +375,14 @@
     var byClient = a.buyer === "client";
     var acc = C.accuracy[a.accuracy] ? a.accuracy : "approx";
     var k = C.accuracy[acc].k, u = C.accuracy[acc].u;
-    var lines = [], excluded = [], notes = [];
+    var lines = [], excluded = [], notes = [], missingTier = [];
     var walls = q.walls, ceil = q.floor;
     var ceilType = a.ceiling || "painted";
     var ceilPainted = ceilType === "stretch" ? 0 : ceil;  // GKP lubos taip pat glaistomos ir dažomos (c01 be glaistymo)
-    var wallsPainted = W.w_wallpaper ? 0 : walls;
+    // Vonios sienų dalis, kuri klijuojama plytelėmis, neglaistoma ir nedažoma (anksčiau buvo skaičiuojama du kartus).
+    var tiledWalls = (W.w_bath_tile && q.wetRooms > 0) ? q.bathTileWalls : 0;
+    var wallsFinish = Math.max(0, walls - tiledWalls);
+    var wallsPainted = W.w_wallpaper ? 0 : wallsFinish;
     var single = a.type === "room";
 
     function labourLine(id, group, label, qty, unit, code, opt) {
@@ -316,15 +396,18 @@
       return line;
     }
     function addMat(line, key, qty, unit, label) {
-      if (byClient) return;
+      if (byClient || !(qty > 0)) return;
       var c;
       if (MATERIALS[key]) {
         c = tierCost(key, a, qty);
-        line.matParts.push({ key: key, label: label || MATERIALS[key].label, qty: qty, unit: unit || MATERIALS[key].unit, tier: c.tier, unitPriceIncl: c.unitPrice, ref: MATERIALS[key].ref, cost: { low: c.low, mid: c.mid, high: c.high } });
+        var to = c.tierObj, tconf = to.conf;
+        if (c.tier === 0) tconf = "C"; // "Nežinau": intervalas tarp ekonominės ir aukštesnės klasės
+        if (to.missing || (c.tier === 0 && (MATERIALS[key].tiers[0].missing || MATERIALS[key].tiers[2].missing))) missingTier.push(MATERIALS[key].label);
+        line.matParts.push({ key: key, label: label || MATERIALS[key].label, qty: qty, unit: unit || MATERIALS[key].unit, tier: c.tier, unitNet: c.unitNet, ref: to.ref, refs: to.refs, conf: tconf, cost: { low: c.low, mid: c.mid, high: c.high } });
       } else {
-        var s = SINGLE[key]; var v = net(s.price) * qty;
+        var s = SINGLE[key]; var v = s.net * qty;
         c = fixed(v);
-        line.matParts.push({ key: key, label: label || s.label, qty: qty, unit: unit || s.unit, tier: null, unitPriceIncl: s.price, ref: s.ref, cost: c });
+        line.matParts.push({ key: key, label: label || s.label, qty: qty, unit: unit || s.unit, tier: null, unitNet: s.net, ref: s.ref, refs: [s.ref], conf: s.conf, cost: c });
       }
       line.mat = addM(line.mat, c);
     }
@@ -335,11 +418,21 @@
     if (W.w_demo) { var share = level === "full" || level === "luxury" ? 0.40 : 0.10; labourLine("w_demo", "prep", "Griovimas (pertvaros, plytelės)", area * share, "m2", "d01"); }
     if (W.w_waste) { var cont = Math.ceil(area / (level === "full" || level === "luxury" ? 25 : 40)); labourLine("w_waste", "prep", "Atliekų išvežimas (konteineris 8-10 m3)", cont, "vnt.", "o01"); }
     // Sienos ir lubos
-    if (W.w_plaster) labourLine("w_plaster", "walls", "Sienų tinkavimas", walls, "m2", "d04");
+    // Paketai: tinkavimas ir sausas lyginimas. Kai įjungti abu, kambarių (sausų patalpų) sienos lyginamos gipso kartonu,
+    // o vonia, virtuvė ir koridorius tinkuojami (prielaida: gipso kartonas po plytelėmis ir drėgnose patalpose nenaudojamas).
+    var plasterArea = W.w_plaster ? (W.w_drywall ? Math.max(0, walls - q.wallsDry) : walls) : 0;
+    var drywallArea = W.w_drywall ? (W.w_plaster ? q.wallsDry : walls) : 0;
+    if (plasterArea > 0) { var lpl = labourLine("w_plaster", "walls", "Sienų tinkavimas ir lyginimas", plasterArea, "m2", "l03"); addMat(lpl, "plaster", plasterArea); }
+    if (drywallArea > 0) {
+      var ldw = labourLine("w_drywall", "walls", "Sausas lyginimas gipso kartonu (sienos)", drywallArea, "m2", "c02");
+      addMat(ldw, "gkp", drywallArea * (1 + NORM.gkpWaste));
+      addMat(ldw, "profile_cd", drywallArea / NORM.cdSpacingM / NORM.cdLenM);
+      addMat(ldw, "profile_ud", drywallArea * (2 / H) / NORM.udLenM);
+    }
     if (W.w_putty) {
       var pw = (a.walls === "very") ? C.waste.puttyUneven : C.waste.putty;
-      var l1 = labourLine("w_putty", "walls", "Sienų glaistymas ir šlifavimas", walls, "m2", "d05");
-      addMat(l1, "putty", walls * (C.cons.puttyStart + C.cons.puttyFinish) * (1 + pw));
+      var l1 = labourLine("w_putty", "walls", "Sienų glaistymas ir šlifavimas", wallsFinish, "m2", "d05");
+      addMat(l1, "putty", wallsFinish * (C.cons.puttyStart + C.cons.puttyFinish) * (1 + pw));
       if (ceilPainted > 0) {
         var l2 = labourLine("w_putty_ceil", "walls", "Lubų glaistymas", ceilPainted, "m2", "d06");
         addMat(l2, "putty", ceilPainted * (C.cons.puttyStart + C.cons.puttyFinish) * (1 + pw));
@@ -348,15 +441,18 @@
     var paintArea = wallsPainted + ceilPainted;
     if (W.w_paint && paintArea > 0) {
       var lp = labourLine("w_paint", "walls", "Gruntavimas ir dažymas (2 sluoksniai)", paintArea, "m2", "d07");
-      addMat(lp, "paint", paintArea * C.cons.paintCoats / C.cons.paintM2PerL * (1 + C.waste.paint));
+      var lpk = function (A2) { return A2 * C.cons.paintCoats / C.cons.paintM2PerL * (1 + C.waste.paint); };
+      addMat(lp, "paint", lpk(wallsPainted));
+      addMat(lp, "paint_ceiling", lpk(ceilPainted));
+      addMat(lp, "primer", paintArea * NORM.primerLM2 * (1 + C.waste.paint));
     }
-    if (W.w_wallpaper) { labourLine("w_wallpaper", "walls", "Tapetų klijavimas", walls, "m2", "d09"); notes.push("Tapetų medžiagų kaina neįtraukta (šaltinio nėra)."); }
+    if (W.w_wallpaper) { var lwp = labourLine("w_wallpaper", "walls", "Tapetų klijavimas", wallsFinish, "m2", "d09"); addMat(lwp, "wallpaper", wallsFinish * (1 + NORM.wallpaperWaste)); notes.push("Tapetų klijai (kainos šaltinio nėra)"); }
     if (ceilType === "gkp") {
       var lg = labourLine("w_gkp", "walls", "Gipso kartono lubos", ceil, "m2", "c01");
       if (!byClient) {
         var gc = tierCost("gkp", a, ceil);
         var gx = { low: gc.low * 2, mid: gc.mid * 2, high: gc.high * 2 }; // + 100 proc. karkasui (prielaida)
-        lg.matParts.push({ key: "gkp", label: "Gipso kartonas ir karkasas (+100 proc. priedas)", qty: ceil, unit: "m2", tier: gc.tier, unitPriceIncl: gc.unitPrice, ref: "m09", cost: gx });
+        lg.matParts.push({ key: "gkp", label: "Gipso kartonas ir karkasas (+100 proc. priedas)", qty: ceil, unit: "m2", tier: gc.tier, unitNet: gc.unitNet, ref: gc.tierObj.ref, refs: gc.tierObj.refs, conf: "C", cost: gx }); // priedas 100 proc. yra prielaida
         lg.mat = addM(lg.mat, gx);
       }
     }
@@ -376,53 +472,76 @@
       ["laminate", "vinyl", "parquet", "tile"].forEach(function (key) {
         var A = zones[key]; if (!A) return;
         var d = FL[key]; var lf = labourLine(d[0], "floors", d[1], A, "m2", d[2]);
-        if (key === "tile") tileMats(lf, A);
-        else addMat(lf, d[3], A * (1 + C.waste.floorClick));
+        if (key === "tile") tileMats(lf, A, 0);
+        else { addMat(lf, d[3], A * (1 + C.waste.floorClick)); notes.push("Grindų paklotas po laminatu, vinilu ar parketlentėmis (kainos šaltinio nėra)"); }
       });
     }
-    if (W.w_skirting) labourLine("w_skirting", "floors", "Grindjuostės", q.skirting, "m", "f07");
-    if (W.w_underfloor) { var ua = q.zoneBathFloor + q.zoneWet; if (ua > 0) labourLine("w_underfloor", "floors", "Šildomos grindys", ua, "m2", "f09"); }
+    if (W.w_skirting) { var lsk = labourLine("w_skirting", "floors", "Grindjuosčių montavimas", q.skirting, "m", "f07"); addMat(lsk, "skirting", q.skirting * (1 + NORM.skirtingWaste)); }
+    if (W.w_underfloor) { var ua = q.zoneBathFloor + q.zoneWet; if (ua > 0) { labourLine("w_underfloor", "floors", "Šildomos grindys", ua, "m2", "f09"); notes.push("Šildomų grindų kilimėliai ir termostatas (kainos šaltinio nėra, įtrauktas tik darbas)"); } }
     // Vonia
-    function tileMats(line, A) {
-      addMat(line, "tile", A * (1 + C.waste.tile));
+    // Plytelės: grindų dalis pagal "Grindų plytelės", sienų dalis pagal "Sienų plytelės". Klijai ir fuga nuo viso ploto.
+    function tileMats(line, A, wallPart) {
+      addMat(line, "tile", (A - wallPart) * (1 + C.waste.tile));
+      addMat(line, "tile_wall", wallPart * (1 + C.waste.tile));
       addMat(line, "adhesive", Math.ceil(A * C.cons.tileGlueKgM2 / C.cons.tileGlueBagKg));
       addMat(line, "grout", Math.ceil(A * C.cons.groutKgM2 / C.cons.groutBagKg));
+      notes.push("Plytelių profiliai ir kampai (kainos šaltinio nėra)");
     }
-    if (W.w_bath_tile && q.wetRooms > 0) { var lt = labourLine("w_bath_tile", "bath", "Plytelės vonioje ir WC (sienos ir grindys)", q.bathTile, "m2", level === "luxury" ? "t02" : "t01"); tileMats(lt, q.bathTile); }
-    if (W.w_waterproof && q.wetRooms > 0) labourLine("w_waterproof", "bath", "Hidroizoliacija", q.waterproof, "m2", "t03");
-    if (W.w_drain && q.baths > 0) labourLine("w_drain", "bath", "Dušo trapas", q.baths, "vnt.", "p03");
+    if (W.w_bath_tile && q.wetRooms > 0) { var lt = labourLine("w_bath_tile", "bath", "Plytelės vonioje ir WC (sienos ir grindys)", q.bathTile, "m2", level === "luxury" ? "t02" : "t01"); tileMats(lt, q.bathTile, q.bathTileWalls); }
+    if (W.w_waterproof && q.wetRooms > 0) {
+      var lwa = labourLine("w_waterproof", "bath", "Hidroizoliacija", q.waterproof, "m2", "t03");
+      addMat(lwa, "waterproof", q.waterproof);
+      addMat(lwa, "wp_tape", q.wetPerimeter + q.showerZones * NORM.wpTapePerShowerM);
+    }
+    if (W.w_drain && q.baths > 0) { labourLine("w_drain", "bath", "Dušo trapas", q.baths, "vnt.", "p03"); notes.push("Dušo trapas ir padėklas kaip prekė (kainos šaltinio nėra, įtrauktas tik montavimas)"); }
     if (W.w_wc && q.wc > 0) { var lw = labourLine("w_wc", "bath", "Klozeto montavimas", q.wc, "vnt.", "p02"); addMat(lw, "wc", q.wc); }
-    if (W.w_shower && q.baths > 0) { var lsh = labourLine("w_shower", "bath", "Dušo kabinos ar stiklo montavimas", q.baths, "vnt.", "p06"); addMat(lsh, "shower", q.baths); }
-    if (W.w_vanity && q.baths > 0) { var lv2 = labourLine("w_vanity", "bath", "Praustuvo su spintele montavimas", q.baths, "vnt.", "p05"); addMat(lv2, "vanity", q.baths); }
+    if (W.w_shower && q.baths > 0) { var lsh = labourLine("w_shower", "bath", "Dušo kabinos ar stiklo montavimas", q.baths, "vnt.", "p06"); addMat(lsh, "shower", q.baths); addMat(lsh, "faucet_shower", q.baths); }
+    if (W.w_vanity && q.baths > 0) { var lv2 = labourLine("w_vanity", "bath", "Praustuvo su spintele montavimas", q.baths, "vnt.", "p05"); addMat(lv2, "vanity", q.baths); addMat(lv2, "faucet", q.baths); }
+    if ((W.w_shower || W.w_vanity) && q.baths > 0) notes.push("Sifonai, lanksčios žarnelės ir ventiliai (kainos šaltinio nėra)");
     // Durys ir langai
-    if (W.w_doors && q.doors > 0) { var ld = labourLine("w_doors", "doors", "Vidaus durų montavimas", q.doors, "vnt.", "w01"); addMat(ld, "door_leaf", q.doors); addMat(ld, "door_frame", q.doors); }
+    if (W.w_doors && q.doors > 0) { var ld = labourLine("w_doors", "doors", "Vidaus durų montavimas", q.doors, "vnt.", "w01"); addMat(ld, "door_leaf", q.doors); addMat(ld, "door_frame", q.doors); addMat(ld, "door_handle", q.doors); addMat(ld, "door_hinge", q.doors * NORM.hingesPerDoor); }
     if (W.w_sills && q.windows > 0) labourLine("w_sills", "doors", "Palangių montavimas", q.windows * C.geo.sillPerWindowM, "m", "f08");
     if (W.w_reveals) { var rv = q.windows * C.geo.windowRevealM + (W.w_doors ? q.doors : 0) * C.geo.doorRevealM; if (rv > 0) labourLine("w_reveals", "doors", "Angokraščių formavimas", rv, "m", "d13"); }
-    if (W.w_windows) excluded.push("Langų keitimas (kainą nurodysime po apžiūros)");
     // Elektra
     var scale = clamp(Math.pow(area / C.scaleRef, C.scaleExp), C.scaleMin, C.scaleMax);
+    // Paketas "Pilna elektros instaliacija su skydeliu": komplekto darbas (e07) ir skydelio surinkimas (e03) su medžiagomis.
     if (W.w_el_full) {
-      var le = labourLine("w_el_full", "electric", "Visa elektros instaliacija (komplektas)", 1, "kompl.", "e07", { scale: scale });
-      addMat(le, "sockets", q.el_points, "vnt.", "Rozetės ir jungikliai (" + q.el_points + " taškai)");
-      addMat(le, "cable", q.el_points * SINGLE.cable.perPoint);
-      notes.push("Skydelio medžiagų kaina nepatikrinta, neįtraukta.");
+      var le = labourLine("w_el_full", "electric", "Pilna elektros instaliacija (komplektas)", 1, "kompl.", "e07", { scale: scale });
+      addMat(le, "sockets", q.el_points);
+      addMat(le, "cable25", q.el_points * SINGLE.cable25.perPoint);
+      addMat(le, "switches", q.roomCount);
+      addMat(le, "cable15", q.lights * SINGLE.cable15.perPoint);
+      var lpn = labourLine("w_el_panel", "electric", "Elektros skydelio surinkimas", 1, "vnt.", "e03");
+      addMat(lpn, "panel", 1);
+      addMat(lpn, "breakers", NORM.breakersBase + NORM.breakersPerRoom * q.rooms);
+      notes.push("Nuotėkio relė (RCD) ir potinkinės dėžutės (kainos šaltinio nėra)");
     }
-    if (W.w_el_points && q.el_points > 0) { var lep = labourLine("w_el_points", "electric", "Nauji elektros taškai", q.el_points, "vnt.", "e01"); addMat(lep, "sockets", q.el_points); addMat(lep, "cable", q.el_points * SINGLE.cable.perPoint); }
-    if (W.w_el_panel) labourLine("w_el_panel", "electric", "Elektros skydelio surinkimas", 1, "vnt.", "e03");
-    if (W.w_lights && q.lights > 0) labourLine("w_lights", "electric", "Šviestuvų montavimas", q.lights, "vnt.", "e05");
+    // Atskiri taškai neskaičiuojami, kai pažymėta visa instaliacija: kitaip taškai ir medžiagos būtų dvigubai.
+    if (W.w_el_points && !W.w_el_full && q.el_points > 0) { var lep = labourLine("w_el_points", "electric", "Nauji elektros taškai", q.el_points, "vnt.", "e01"); addMat(lep, "sockets", q.el_points); addMat(lep, "cable25", q.el_points * SINGLE.cable25.perPoint); notes.push("Potinkinės dėžutės (kainos šaltinio nėra)"); }
+    if (W.w_lights && q.lights > 0) {
+      var lli = labourLine("w_lights", "electric", "Šviestuvų montavimas", q.lights, "vnt.", "e05");
+      var ceilL = Math.min(q.lights, q.rooms); // po vieną lubinį šviestuvą kambariui, kiti įleidžiamos panelės (prielaida)
+      addMat(lli, "lights", ceilL);
+      addMat(lli, "lights_panel", q.lights - ceilL);
+    }
     // Santechnika ir šildymas
     if (W.w_pl_full) labourLine("w_pl_full", "plumb", "Visa santechnikos instaliacija (komplektas)", 1, "kompl.", "p08", { scale: scale });
-    if (W.w_pl_points && q.pl_points > 0) labourLine("w_pl_points", "plumb", "Nauji santechnikos taškai", q.pl_points, "vnt.", "p01");
+    if (W.w_pl_points && !W.w_pl_full && q.pl_points > 0) labourLine("w_pl_points", "plumb", "Nauji santechnikos taškai", q.pl_points, "vnt.", "p01");
+    if ((W.w_pl_full || (W.w_pl_points && q.pl_points > 0)) && q.pl_points > 0) {
+      var lpp = lines.filter(function (l) { return l.id === "w_pl_full" || l.id === "w_pl_points"; })[0];
+      addMat(lpp, "pipe", q.pl_points * NORM.pipeMPerPoint);
+      addMat(lpp, "pipe_fit", q.pl_points * NORM.fitPerPoint);
+      addMat(lpp, "pipe_drain", q.pl_points * NORM.drainMPerPoint);
+    }
     if (W.w_radiators && q.radiators > 0) { var lr = labourLine("w_radiators", "plumb", "Radiatorių keitimas", q.radiators, "vnt.", "h01"); addMat(lr, "radiator", q.radiators); }
     // Kita
     if (W.w_clean) labourLine("w_clean", "other", "Valymas po remonto", area, "m2", "o02");
-    if (W.w_supervision) excluded.push("Techninė priežiūra (kainą nustato rangovas)");
 
     // Smulkios medžiagos 10 proc. nuo medžiagų (prielaida)
     var matSum = lines.reduce(function (s, l) { return addM(s, l.mat); }, fixed(0));
     if (!byClient && matSum.mid > 0) {
-      var cons = { id: "w_consumables", group: "other", label: "Smulkios medžiagos (gruntas, juostos, silikonas)", qty: 1, unit: "kompl.", code: null, labour: fixed(0), mat: { low: matSum.low * C.consumablesPct, mid: matSum.mid * C.consumablesPct, high: matSum.high * C.consumablesPct }, matParts: [], conf: "N" };
-      cons.matParts.push({ key: "consumables", label: "Smulkios medžiagos, 10 proc. nuo medžiagų", qty: 1, unit: "kompl.", tier: null, unitPriceIncl: null, ref: null, cost: cons.mat });
+      var cons = { id: "w_consumables", group: "other", label: "Smulkios medžiagos (tvirtinimo detalės, silikonas, juostos)", qty: 1, unit: "kompl.", code: null, labour: fixed(0), mat: { low: matSum.low * C.consumablesPct, mid: matSum.mid * C.consumablesPct, high: matSum.high * C.consumablesPct }, matParts: [], conf: "N" };
+      cons.matParts.push({ key: "consumables", label: "Smulkios medžiagos, 10 proc. nuo medžiagų", qty: 1, unit: "kompl.", tier: null, unitNet: null, ref: null, refs: [], cost: cons.mat });
       lines.push(cons);
     }
 
@@ -482,8 +601,17 @@
     if (total.high < total.mid) total.high = total.mid;
     var per = function (v) { return area > 0 ? Math.round(v / area / 10) * 10 : 0; };
 
-    excluded = excluded.concat(["Baldai ir buitinė technika", "Langai (kol nėra patikrintos kainos)", "Techninė priežiūra", "Leidimai ir projektai statybai", "Bendrų stovų keitimas", "Netikėti darbai virš rezervo"]);
-    excluded = excluded.filter(function (x, i) { return excluded.indexOf(x) === i; });
+    // "Kas neįeina" (04, 3 sk. 9 p.). Jei klientas pažymėjo langus ar techninę priežiūrą, rodoma viena, tikslesnė eilutė.
+    // Langų kainos turime tik mažiausias ("nuo", sandėlio langai), todėl į sumą jos neįtraukiamos, tik parodomos.
+    var winRef = P.items.n51, winTxt = "";
+    if (winRef && winRef.net && typeof winRef.net[0] === "number") winTxt = ", pvz. PVC langas 1400x1200 mm nuo " + (Math.round(winRef.net[0] * f * 100) / 100).toFixed(2).replace(".", ",") + " EUR " + (vat === "incl" ? "su PVM" : "be PVM") + " be montavimo";
+    excluded = ["Baldai ir buitinė technika",
+      (W.w_windows ? "Langų keitimas (pažymėjote, kainą nurodysime po apžiūros" : "Langai (turime tik mažiausias kainas") + winTxt + ")",
+      W.w_supervision ? "Techninė priežiūra (pažymėjote, kainą nustato rangovas)" : "Techninė priežiūra",
+      "Leidimai ir projektai statybai", "Bendrų stovų keitimas", "Netikėti darbai virš rezervo"];
+    if (a.damp === "yes" || a.damp === "unknown") excluded.push("Drėgmės ar pelėsio šalinimas");
+    missingTier.forEach(function (m) { notes.push(m + ": pasirinktos klasės kainos šaltinio nėra, skaičiuota artimiausia esama klasė"); });
+    notes = notes.filter(function (x, i) { return notes.indexOf(x) === i; });
 
     return {
       version: C.version, vat: vat, factor: f, level: level, accuracy: acc, region: region, complexity: cx, flags: flags,
@@ -493,7 +621,7 @@
       split: { labour: labourMid * f, materials: matMid * f, reserve: reserve * f, design: design * f },
       reservePct: reservePct,
       net: { labourMid: labourMid, matMid: matMid, subtotal: subtotal, reserve: reserve, design: design, mid: mid, low: low, high: high },
-      groups: groups.map(function (gr) { return { id: gr.id, label: gr.label, labour: gr.labour * f, materials: gr.materials * f, total: gr.total * f, lines: gr.lines.map(function (l) { return { id: l.id, label: l.label, qty: l.qty, unit: l.unit, code: l.code, conf: l.conf, labour: l.labour.mid * f, materials: l.mat.mid * f, matParts: l.matParts.map(function (m) { return { key: m.key, label: m.label, qty: m.qty, unit: m.unit, tier: m.tier, unitPrice: m.unitPriceIncl == null ? null : (vat === "incl" ? m.unitPriceIncl : m.unitPriceIncl / 1.21), ref: m.ref, cost: m.cost.mid * f }; }) }; }) }; }),
+      groups: groups.map(function (gr) { return { id: gr.id, label: gr.label, labour: gr.labour * f, materials: gr.materials * f, total: gr.total * f, lines: gr.lines.map(function (l) { return { id: l.id, label: l.label, qty: l.qty, unit: l.unit, code: l.code, conf: l.conf, labour: l.labour.mid * f, materials: l.mat.mid * f, matParts: l.matParts.map(function (m) { return { key: m.key, label: m.label, qty: m.qty, unit: m.unit, tier: m.tier, unitPrice: m.unitNet == null ? null : m.unitNet * f, ref: m.ref, refs: m.refs || [], conf: m.conf || null, cost: m.cost.mid * f }; }) }; }) }; }),
       timeline: tl, warnings: warnings, notes: notes, excluded: excluded, byClient: byClient, priceDate: "2026-11"
     };
   }
@@ -521,6 +649,22 @@
     return c.slice(0, 3);
   }
 
+  // Pasirenkami paketai: kiek kiekvienas keičia vidutinę sumą (su rezervu, pagal PVM jungiklį).
+  // delta = suma su paketu - suma be jo, kitiems darbams paliekant dabartinius pasirinkimus.
+  var PACKAGES = WORKS.filter(function (w) { return w.pkg; }).map(function (w) { return w.id; });
+  function packageImpact(a, P, cfg) {
+    var rooms = a.customRooms && a.customRooms.length ? a.customRooms : null;
+    var W = worksState(a, rooms), D = defaultWorks(a, rooms);
+    return PACKAGES.map(function (id) {
+      var w = WORKS.filter(function (x) { return x.id === id; })[0];
+      var mk = function (on) { var b = JSON.parse(JSON.stringify(a)); b.works = Object.assign({}, W); b.works[id] = on; return calculate(b, P, cfg); };
+      var r1 = mk(true), r0 = mk(false);
+      return { id: id, label: w.label, desc: w.desc, on: !!W[id], def: !!D[id], delta: r1.raw.mid - r0.raw.mid,
+        labour: r1.split.labour - r0.split.labour, materials: r1.split.materials - r0.split.materials, reserve: r1.split.reserve - r0.split.reserve };
+    });
+  }
+  var MAT_KEYS = Object.keys(MATERIALS).filter(function (k5) { return !MATERIALS[k5].tierOf; });
+
   // Tikslumo lygis (5.2)
   function accuracyFrom(p) {
     if (p.roomsCustom && p.materialsDone && p.knownShare >= 0.7) return "good";
@@ -531,7 +675,7 @@
   // Numatytieji atsakymai (04, 1 skyrius)
   function defaults(cfg) {
     cfg = cfg || g.CALC_CONFIG || {};
-    var mat = {}; Object.keys(MATERIALS).forEach(function (k4) { mat[k4] = 2; });
+    var mat = {}; MAT_KEYS.forEach(function (k4) { mat[k4] = 2; });
     return {
       type: "flat", roomKind: "bath", age: "unknown", city: cfg.defaultCity || "kaunas", area: 55, rooms: 2, baths: "1",
       heightOpt: "2.6", heightExact: 3.0, floors: 1,
@@ -545,6 +689,7 @@
 
   var api = { C: C, defaults: defaults, ROOM_TYPES: ROOM_TYPES, TEMPLATES: TEMPLATES, MATERIALS: MATERIALS, SINGLE: SINGLE, GROUPS: GROUPS, WORKS: WORKS,
     defaultRooms: defaultRooms, quantities: quantities, defaultWorks: defaultWorks, worksState: worksState,
-    calculate: calculate, uncertainties: uncertainties, accuracyFrom: accuracyFrom, roundStep: roundStep, height: height };
+    calculate: calculate, uncertainties: uncertainties, accuracyFrom: accuracyFrom, roundStep: roundStep, height: height,
+    syncPrices: syncPrices, TIER_SRC: TIER_SRC, NORM: NORM, PACKAGES: PACKAGES, packageImpact: packageImpact, MAT_KEYS: MAT_KEYS };
   g.RemontoCalc = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -123,6 +123,7 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); ma
 .term-btn .ic { width: 18px; height: 18px; }
 .term-tip { position: absolute; z-index: 5; left: 50%; top: 100%; transform: translateX(-50%); width: min(280px, 78vw); background: var(--ink); color: #fff; font-size: .86rem; font-weight: 400; line-height: 1.45; padding: 10px 12px; border-radius: 10px; box-shadow: var(--shadow); }
 .term-tip strong { color: #fff; }
+@media (hover: hover) { .term:hover .term-tip, .term-btn:focus-visible + .term-tip { display: block; } }
 
 /* Navigacija */
 .step-nav { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-top: 26px; padding-top: 18px; border-top: 1px solid #eee8de; }
@@ -183,6 +184,18 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); ma
 .witem .field { flex: 1 1 calc(100% - 54px); margin: 4px 0 10px 54px; }
 .tgl-t { display: flex; flex-direction: column; min-width: 0; }
 .tgl-s { font-weight: 400; font-size: .84rem; color: var(--muted); }
+.wgroup.pkgs { background: #fff; border: 2px solid var(--accent); }
+.pk-hint { margin: 2px 6px 6px; }
+.witem.pk { padding: 8px 0; }
+.witem.pk .tgl { align-items: flex-start; }
+.witem.pk .switch { margin-top: 2px; }
+.pk-amt { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 10px; background: var(--soft); border: 1px solid #e3dccf; color: var(--ink); font-weight: 700; font-size: .88rem; }
+.pk-amt.on { background: var(--accent-s); border-color: #b9d6ca; color: #163f35; }
+.pk-def { display: block; margin-top: 4px; font-size: .8rem; color: var(--muted); }
+.pk-list li > span { display: flex; flex-direction: column; min-width: 0; }
+.pk-st { font-size: .82rem; color: var(--muted); }
+.live-split li.lv-pk-h { border-top: 1px solid #3a4452; padding-top: 8px; margin-top: 4px; color: #d8cdb9; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+.live-split li.lv-pk { font-size: .86rem; color: #e6dccb; }
 
 /* Patalpos */
 .rooms { display: grid; gap: 12px; }
@@ -199,6 +212,7 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); ma
 
 /* Medžiagos */
 .mat .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sub-h + .hint { margin-bottom: 16px; }
 
 /* Gyva suma */
 .live-card { background: var(--ink); color: #f4f1eb; border-radius: var(--r); padding: 20px; box-shadow: var(--shadow); }
@@ -261,7 +275,9 @@ body.on-result .progress-top .vat-switch { display: none; }
 .legend { width: 100%; border-collapse: collapse; font-size: .94rem; }
 .legend th, .legend td { padding: 8px 4px; border-bottom: 1px solid #eee7dc; text-align: left; font-weight: 500; }
 .legend thead th { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.legend tbody th { display: flex; align-items: center; flex-wrap: wrap; gap: 0 8px; font-weight: 600; }
+.legend tbody th { font-weight: 600; vertical-align: middle; }
+.legend td { vertical-align: middle; }
+.legend tbody th .sw { vertical-align: -3px; margin-right: 8px; }
 .num { text-align: right !important; white-space: nowrap; }
 .sw { display: inline-block; width: 16px; height: 16px; border-radius: 4px; flex: none; }
 .seg-l { background: var(--accent); }
@@ -325,7 +341,13 @@ input:checked + .box { background: var(--accent); border-color: var(--accent); c
 .info-card { background: #fff; border-radius: var(--r); padding: 20px; border: 1px solid #ece6dc; }
 .info-card.soft { background: var(--soft); }
 .sources { margin-top: 16px; background: #fff; border-radius: var(--r); border: 1px solid #ece6dc; }
-.sources summary { cursor: pointer; padding: 14px 18px; font-weight: 700; min-height: 52px; display: flex; align-items: center; }
+.sources summary { cursor: pointer; padding: 14px 18px; font-weight: 700; min-height: 52px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.sources summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin: -4px 4px 0 0; flex: none; }
+.sources[open] > summary::after { transform: rotate(225deg); margin-top: 4px; }
+.assume-box { margin-top: 0; }
+.sum-h { display: block; font-family: var(--serif); font-weight: 600; font-size: 1.3rem; }
+.sum-s { display: block; font-weight: 400; font-size: .88rem; color: var(--muted); }
+.weak { color: #7a4a14; font-weight: 700; }
 .sources > div { padding: 0 12px 12px; }
 .sources h3 { margin-top: 16px; }
 .ptable { min-width: 760px; font-size: .84rem; }
@@ -367,11 +389,28 @@ input:checked + .box { background: var(--accent); border-color: var(--accent); c
   .top-nav a:first-child { display: inline-flex; }
   .intro { grid-template-columns: 1.05fr 1fr; padding: 30px 0 40px; gap: 40px; }
   .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .res-grid { grid-template-columns: 1fr 1fr; }
   .donut-fig { grid-template-columns: 180px 1fr; }
   .info-grid { grid-template-columns: 1.3fr 1fr; }
   .res-hero { padding: 34px 36px; }
   .card { padding: 24px 26px; }
+}
+@media (min-width: 1000px) {
+  .res-grid { grid-template-columns: 1fr 1fr; }
+}
+/* Labai siauri ekranai (320 px): parinktys vienu stulpeliu, kad tekstas nelūžtų į 3 eilutes */
+@media (max-width: 359px) {
+  .opts.c2, .opts.c3, .opts.c4, .mat .opts { grid-template-columns: 1fr; }
+  .step-card { padding: 18px 12px 20px; }
+}
+/* Telefone antraštė neprilipusi: apačioje jau yra prilipusi suma, o dvi juostos su dideliu šriftu uždengtų trečdalį ekrano */
+@media (max-width: 559px) {
+  .site-header { position: static; }
+  .brand-sub { display: none; }
+  html { scroll-padding-top: 12px; }
+}
+@media (max-width: 399px) {
+  .grp .g-ic { display: none; }
+  .grp summary { gap: 8px; padding: 10px; }
 }
 @media (min-width: 1100px) {
   .layout { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }

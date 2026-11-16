@@ -26,6 +26,8 @@
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function vatLbl() { return S.a.vat === "incl" ? "su PVM" : "be PVM"; }
   function ic(id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-hidden="true"><use href="#' + id + '"/></svg>'; }
+  // "per 1 darbo valandą", "per 24 darbo valandas", "per 10 darbo valandų"
+  function hoursTxt(n) { n = Math.round(+n || 0); var t = n % 10, h = n % 100; var w = (h >= 10 && h <= 20) || t === 0 ? "valandų" : t === 1 ? "valandą" : "valandas"; return n + " darbo " + w; }
   function cityLabel(id) { var r = CFG.regions.filter(function (x) { return x.id === id; })[0]; return r ? r.label : id; }
   function telHref() { return "tel:" + CFG.company.phone.replace(/[^\d+]/g, ""); }
 
@@ -43,7 +45,7 @@
   function term(key) {
     var t = TERMS[key]; if (!t) return "";
     var id = "tip-" + key + "-" + (++termSeq);
-    return '<span class="term"><button type="button" class="term-btn" aria-expanded="false" aria-controls="' + id + '" aria-label="Kas yra ' + esc(t[0].toLowerCase()) + '?">' + ic("i-info") + '</button><span class="term-tip" id="' + id + '" role="note" hidden><strong>' + esc(t[0]) + ".</strong> " + esc(t[1]) + "</span></span>";
+    return '<span class="term"><button type="button" class="term-btn" aria-expanded="false" aria-controls="' + id + '" aria-label="Kas yra ' + esc(t[0].charAt(0).toLowerCase() + t[0].slice(1)) + '?">' + ic("i-info") + '</button><span class="term-tip" id="' + id + '" role="note" hidden><strong>' + esc(t[0]) + ".</strong> " + esc(t[1]) + "</span></span>";
   }
 
   // ---------- valdikliai ----------
@@ -93,15 +95,20 @@
   function relevantMaterials() {
     var a = S.a, W = R.worksState(a, a.customRooms), out = [];
     if (W.w_paint) out.push("paint");
+    if (W.w_wallpaper) out.push("wallpaper");
     if (W.w_floor) { out.push("floor_" + (a.floorDry || "laminate")); if (a.floorWet === "vinyl") { if (out.indexOf("floor_vinyl") < 0) out.push("floor_vinyl"); } }
+    if (W.w_skirting) out.push("skirting");
     if (W.w_bath_tile || (W.w_floor && a.floorWet === "tile")) out.push("tile");
+    if (W.w_bath_tile) out.push("tile_wall");
     if (W.w_doors) out.push("door_leaf");
     if (W.w_wc) out.push("wc");
     if (W.w_shower) out.push("shower");
     if (W.w_vanity) out.push("vanity");
+    if (W.w_shower || W.w_vanity) out.push("faucet");
     if (W.w_el_points || W.w_el_full) out.push("sockets");
+    if (W.w_lights) out.push("lights");
     if (W.w_radiators) out.push("radiator");
-    if (a.ceiling === "gkp") out.push("gkp");
+    if (a.ceiling === "gkp" || W.w_drywall) out.push("gkp");
     return out;
   }
 
@@ -113,10 +120,11 @@
       '<p class="lead">Atsakykite į keletą klausimų ir pamatysite preliminarią kainą. Jums nereikia registruotis. Kontaktų prašome tik pačioje pabaigoje ir tik jei norite tikslesnės sąmatos.</p>' +
       '<div class="cta-row"><button type="button" class="btn primary lg" data-act="start"><span>Pradėti</span>' + ic("i-right") + '</button><a class="btn ghost lg" href="#metodika">Kaip skaičiuojame</a></div>' +
       '<p class="fine">Kainos pagal 2026 m. lapkričio rinką. Atnaujiname kas ketvirtį.</p>' +
-      '<ul class="perks"><li>' + ic("i-check") + "<span>Kaina intervalu, ne vienas skaičius</span></li><li>" + ic("i-check") + "<span>Darbai ir medžiagos atskirai</span></li><li>" + ic("i-check") + "<span>Apie 3 minutės, be registracijos</span></li></ul></div>" +
+      '<ul class="perks"><li>' + ic("i-check") + "<span>Kaina intervalu, ne vienas skaičius</span></li><li>" + ic("i-check") + "<span>Darbai ir medžiagos atskirai</span></li><li>" + ic("i-check") + "<span>Apie 3 minutes, be registracijos</span></li></ul></div>" +
       '<div class="intro-art" aria-hidden="true">' + heroArt() + "</div></div>";
   }
   function heroArt() {
+    var hc = heroChip();
     return '<svg viewBox="0 0 420 360" class="hero-svg" focusable="false">' +
       '<defs><linearGradient id="hg-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e2d6"/><stop offset="1" stop-color="#ddd3c3"/></linearGradient><linearGradient id="hg-floor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c79c6b"/><stop offset="1" stop-color="#a77a4b"/></linearGradient><linearGradient id="hg-win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe3dc"/><stop offset="1" stop-color="#eaf3ef"/></linearGradient></defs>' +
       '<circle cx="300" cy="90" r="70" fill="#e3efe9"/>' +
@@ -130,8 +138,15 @@
       '<g transform="translate(250 210)"><path d="M0 40 40 24 80 40 40 56Z" fill="#f4f1eb"/><path d="M0 40v12l40 16V56Z" fill="#d9cfbf"/><path d="M80 40v12L40 68V56Z" fill="#c8bca9"/></g>' +
       '<g transform="translate(120 222)"><rect x="0" y="0" width="16" height="44" rx="4" fill="#9a6326"/><rect x="-14" y="-26" width="44" height="28" rx="6" fill="#1b222c"/><rect x="-10" y="-22" width="36" height="20" rx="4" fill="#e3efe9"/></g>' +
       '<g transform="translate(330 176)"><path d="M0 50c0-20 6-32 14-38 8 6 14 18 14 38z" fill="#2f7a66"/><path d="M14 12c-10-8-20-6-24 2 8 0 16 2 24 8M14 12c10-8 20-6 24 2-8 0-16 2-24 8" fill="#3d8f78"/><rect x="2" y="48" width="24" height="18" rx="3" fill="#b07a3b"/></g>' +
-      '<g font-family="inherit" font-weight="700"><rect x="20" y="40" width="132" height="50" rx="14" fill="#fff" stroke="#e3dccf"/><text x="36" y="62" font-size="12" fill="#5b6470">Preliminariai</text><text x="36" y="80" font-size="15" fill="#1b222c">nuo 11 iki 21 tūkst.</text></g>' +
-      '</svg>';
+      '<g font-family="inherit" font-weight="700"><rect x="10" y="30" width="214" height="60" rx="14" fill="#fff" stroke="#e3dccf"/><text x="24" y="53" font-size="12" fill="#5b6470" id="heroK">' + esc(hc.k) + '</text><text x="24" y="76" font-size="15" fill="#1b222c" id="heroV">' + esc(hc.v) + "</text></g>" +
+      "</svg>";
+  }
+  // Įžangos ženkliukas skaičiuojamas tuo pačiu varikliu iš numatytųjų atsakymų (anksčiau buvo įrašytas ranka).
+  // Tikslumas "vidutinis", nes jį gauna klientas, perėjęs visus žingsnius su numatytosiomis reikšmėmis.
+  function heroChip() {
+    var d = R.defaults(CFG); d.vat = S.a.vat; d.accuracy = "medium";
+    var r = R.calculate(d, P, CFG), k = function (v) { return dec(v / 1000, 1); };
+    return { k: "Pvz. " + d.area + " m2 butas, " + vatLbl(), v: k(r.total.low) + "-" + k(r.total.high) + " tūkst. EUR", r: r };
   }
 
   function step1() {
@@ -155,7 +170,7 @@
   function areaLimits() { return S.a.type === "room" ? [2, 80] : [15, 400]; }
 
   function step2() {
-    var a = S.a, h = head("Būklė", "Būklė keičia paruošimo darbų kiekį ir rezervą.");
+    var a = S.a, h = head("Būklė", "Būklė keičia paruošimo darbų kiekį.");
     h += radios("state", "Kokia dabartinė būklė?", [{ v: "good", label: "Gera", desc: "reikia tik atnaujinti paviršius" }, { v: "medium", label: "Vidutinė", desc: "nusidėvėję paviršiai" }, { v: "bad", label: "Bloga", desc: "reikia daug paruošimo. Pavyzdžiui, seni laidai ar vamzdžiai, trupantis tinkas, išsipūtusios grindys." }, { v: "shell", label: "Nauja statyba be apdailos" }], a.state, { cols: "c2" });
     h += radios("walls", "Ar sienos lygios?", [{ v: "even", label: "Lygios" }, { v: "slight", label: "Šiek tiek nelygios" }, { v: "very", label: "Labai nelygios", desc: "reikia tinkuoti" }, { v: "unknown", label: "Nežinau" }], a.walls, { cols: "c4" });
     h += radios("damp", "Ar yra drėgmės ar pelėsio?", [{ v: "no", label: "Ne" }, { v: "yes", label: "Taip" }, { v: "unknown", label: "Nežinau" }], a.damp, { cols: "c3" });
@@ -167,16 +182,17 @@
 
   var LEVEL_INFO = {
     partial: { t: "Dalinis (kosmetinis)", d: "Atnaujinate sienas, lubas ir grindis. Elektra ir santechnika lieka.", inc: ["Senų dangų nuėmimas", "Glaistymas ir dažymas", "Nauja grindų danga ir grindjuostės", "Atliekų išvežimas ir valymas"] },
-    standard: { t: "Standartinis", d: "Atnaujinate sienas, lubas, grindis, duris, vonią. Dalį elektros ir santechnikos pakeičiate.", inc: ["Viskas iš dalinio", "Vonios plytelės ir hidroizoliacija", "Nauji santechnikos prietaisai", "Vidaus durys", "Dalis naujų elektros taškų"] },
-    full: { t: "Pilnas (kapitalinis)", d: "Viskas iš naujo: nuo griovimo, elektros ir vamzdžių iki apdailos.", inc: ["Griovimas ir tinkavimas pagal būklę", "Grindų išlyginimas", "Visa elektros ir santechnikos instaliacija", "Radiatoriai, palangės, angokraščiai"] },
-    luxury: { t: "Prabangus", d: "Pilnas remontas su aukštesnio lygio medžiagomis ir sudėtingesniais sprendimais, pvz. paslėptos durų staktos, šešėlinės siūlės, didelio formato plytelės.", inc: ["Viskas iš pilno", "Aukštesnės klasės medžiagos", "Šešėlinės siūlės, didelio formato plytelės", "Šildomos grindys ir interjero projektas"] }
+    standard: { t: "Standartinis", d: "Atnaujinate sienas, lubas, grindis, duris, vonią. Dalį elektros ir santechnikos pakeičiate.", inc: ["Viskas, kas įeina į dalinį", "Vonios plytelės ir hidroizoliacija", "Nauji santechnikos prietaisai", "Vidaus durys", "Dalis naujų elektros taškų"] },
+    full: { t: "Pilnas (kapitalinis)", d: "Viskas iš naujo: nuo griovimo, elektros ir vamzdžių iki apdailos.", inc: ["Griovimas, tinkavimas ir sausas lyginimas", "Grindų išlyginimas", "Visa elektros instaliacija su skydeliu ir santechnika", "Radiatoriai, palangės, angokraščiai"] },
+    luxury: { t: "Prabangus", d: "Pilnas remontas su aukštesnio lygio medžiagomis ir sudėtingesniais sprendimais, pvz. paslėptos durų staktos, šešėlinės siūlės, didelio formato plytelės.", inc: ["Viskas, kas įeina į pilną", "Aukštesnės klasės medžiagos", "Šešėlinės siūlės, didelio formato plytelės", "Šildomos grindys ir interjero projektas"] }
   };
   function step3() {
     var a = S.a, h = head("Remonto lygis", "Lygis nustato, kurie darbai bus pažymėti kitame žingsnyje. Juos galėsite keisti.");
     h += '<fieldset class="q"><legend class="q-l">Kokio remonto reikia?</legend><div class="levels">';
     R.C.levelOrder.forEach(function (lv) {
       var info = LEVEL_INFO[lv];
-      var r = calc({ level: lv, works: {}, mat: S.flags.matTouched ? a.mat : matForLevel(lv) });
+      // Pasirinktam lygiui naudojami tikri kliento darbai ir medžiagos, kad kortelė sutaptų su gyva suma.
+      var r = lv === a.level ? calc() : calc({ level: lv, works: {}, mat: S.flags.matTouched ? a.mat : matForLevel(lv) });
       var id = "r-level-" + lv;
       h += '<label class="lvl" for="' + id + '"><input class="sr-only" type="radio" name="level" id="' + id + '" value="' + lv + '" data-bind="level"' + (a.level === lv ? " checked" : "") + '><span class="lvl-in"><span class="lvl-top">' + levelArt(lv) + '<span class="lvl-price"><span class="lvl-k">apie</span> ' + fmt(r.perM2.mid) + " EUR/m2 <span class=\"lvl-k\">" + vatLbl() + '</span></span></span><span class="lvl-t">' + info.t + '</span><span class="lvl-d">' + info.d + '</span><ul class="ticks">' + info.inc.map(function (x) { return "<li>" + ic("i-check") + "<span>" + x + "</span></li>"; }).join("") + "</ul></span></label>";
     });
@@ -201,7 +217,7 @@
     if (hp.el !== "no" || hp.pipe === "yes") return "standard";
     return "partial";
   }
-  function matForLevel(lv) { var m = {}; Object.keys(R.MATERIALS).forEach(function (k) { m[k] = lv === "luxury" ? 3 : 2; }); return m; }
+  function matForLevel(lv) { var m = {}; R.MAT_KEYS.forEach(function (k) { m[k] = lv === "luxury" ? 3 : 2; }); return m; }
   function levelArt(lv) {
     var n = R.C.levelOrder.indexOf(lv) + 1, bars = "";
     for (var i = 0; i < 4; i++) bars += '<rect x="' + (4 + i * 11) + '" y="' + (30 - (i + 1) * 6) + '" width="8" height="' + ((i + 1) * 6) + '" rx="2" class="' + (i < n ? "on" : "off") + '"/>';
@@ -218,8 +234,9 @@
     var h = head("Darbai", "Pažymėjome darbus pagal lygį „" + LEVEL_INFO[a.level].t + "“. Pakeiskite, jei reikia.");
     h += errSummary();
     h += '<div class="groups">';
+    h += pkgBlock(a, W, q);
     R.GROUPS.forEach(function (gr) {
-      var items = R.WORKS.filter(function (w) { return w.group === gr.id; });
+      var items = R.WORKS.filter(function (w) { return w.group === gr.id && !w.pkg; });
       h += '<fieldset class="wgroup"><legend class="wg-l">' + ic(GROUP_ICON[gr.id], "wg-ic") + "<span>" + gr.label + "</span></legend>";
       items.forEach(function (w) {
         var avail = true, why = "";
@@ -227,12 +244,14 @@
         if (w.cond === "bath" && q.baths === 0) { avail = false; why = "Nėra vonios."; }
         if (w.cond === "wc" && q.wc === 0) { avail = false; why = "Nėra WC."; }
         if (w.cond === "windows" && q.windows === 0) { avail = false; why = "Patalpose nėra langų."; }
+        if (w.id === "w_el_points" && W.w_el_full) { avail = false; why = "Įeina į visą elektros instaliaciją."; }
+        if (w.id === "w_pl_points" && W.w_pl_full) { avail = false; why = "Įeina į visą santechnikos instaliaciją."; }
         var sub = w.note || "";
         if (!avail) sub = why;
-        h += '<div class="witem' + (avail ? "" : " off") + '">' + toggle("w-" + w.id, w.label + (w.term ? "" : ""), avail && W[w.id], 'data-work="' + w.id + '"' + (avail ? "" : " disabled"), sub) + (w.term ? term(w.term) : "");
+        h += '<div class="witem' + (avail ? "" : " off") + '">' + toggle("w-" + w.id, w.label, avail && W[w.id], 'data-work="' + w.id + '"' + (avail ? "" : " disabled"), sub) + (w.term ? term(w.term) : "");
         if (w.qty && W[w.id] && avail) {
           var dq = q.defaults[w.qty];
-          h += numField("qty-" + w.qty, w.qtyLabel, a.qty[w.qty] != null ? a.qty[w.qty] : dq, 'data-qty="' + w.qty + '"', "Numatyta: " + dq + ". Jei nežinote, palikite.", "vnt.");
+          h += numField("qty-" + w.qty, w.qtyLabel, a.qty[w.qty] != null ? a.qty[w.qty] : dq, 'data-qty="' + w.qty + '"', "Numatyta: " + dq + ". Jei nežinote, palikite numatytą skaičių, tik tikslumas bus mažesnis.", "vnt.");
         }
         h += "</div>";
         if (w.id === "w_wallpaper") h += '<div class="witem wide">' + ceilingRadios("ceiling4") + "</div>";
@@ -245,12 +264,40 @@
     return h + navButtons("Toliau", { extra: extra });
   }
 
-  function roomsList() { return S.a.customRooms && S.a.customRooms.length ? S.a.customRooms : null; }
+  // Pasirenkami paketai: atskiras blokas, prie kiekvieno parodoma, kiek jis keičia sumą.
+  function pkgAmount(p) {
+    var d = Math.round(p.delta / 10) * 10;
+    if (Math.abs(d) < 10) return { txt: "Šiam objektui sumos nekeičia", cls: "" };
+    // Neigiamas pokytis būna tik sausam lyginimui kartu su tinkavimu: kambariuose jis pakeičia brangesnį tinką.
+    if (p.on) return d > 0 ? { txt: "Įskaičiuota: +" + eur(d), cls: " on" } : { txt: "Įskaičiuota: vietoj tinko, suma mažesnė " + eur(-d), cls: " on" };
+    return d > 0 ? { txt: "Įjungus: +" + eur(d), cls: "" } : { txt: "Įjungus vietoj tinko suma mažėtų " + eur(-d), cls: "" };
+  }
+  function pkgShort(p) { var d = Math.round(p.delta / 10) * 10; return Math.abs(d) < 10 ? "0 EUR" : (d > 0 ? "+" : "-") + eur(Math.abs(d)); }
+  function pkgImpact() { return R.packageImpact(Object.assign({}, S.a, { accuracy: currentAccuracy() }), P, CFG); }
+  function pkgBlock(a, W, q) {
+    var imp = pkgImpact();
+    var h = '<fieldset class="wgroup pkgs"><legend class="wg-l">' + ic("i-spark", "wg-ic") + "<span>Pasirenkami darbų paketai</span></legend>" +
+      '<p class="hint pk-hint">Suma rodoma su rezervu, ' + vatLbl() + ". Pilnam ir prabangiam lygiui paketai įjungti, daliniam ir standartiniam išjungti.</p>";
+    imp.forEach(function (p) {
+      var am = pkgAmount(p);
+      var sub = esc(p.desc) + '<span class="pk-amt' + am.cls + '">' + am.txt + '</span><span class="pk-def">Pagal lygį: ' + (p.def ? "įjungta" : "išjungta") + "</span>";
+      h += '<div class="witem pk">' + toggle("w-" + p.id, p.label, W[p.id], 'data-work="' + p.id + '"', sub);
+      if (p.id === "w_el_full" && W.w_el_full) {
+        h += numField("qty-el_points", "Kiek elektros taškų (rozetės)?", a.qty.el_points != null ? a.qty.el_points : q.defaults.el_points, 'data-qty="el_points"', "Numatyta: " + q.defaults.el_points + ". Pagal šį skaičių skaičiuojamos rozetės ir kabelis.", "vnt.");
+      }
+      h += "</div>";
+    });
+    return h + "</fieldset>";
+  }
+
+  function roomsList() { return Array.isArray(S.a.customRooms) ? S.a.customRooms : null; }
   function step5() {
     var a = S.a, rooms = roomsList() || R.defaultRooms(a);
     var h = head("Patalpos", "Patikslinkite patalpas. Jei nenorite, praleiskite.");
     h += '<div class="step-tools"><button type="button" class="btn ghost" data-act="skipRooms"><span>Praleisti, naudoti standartinį paskirstymą</span>' + ic("i-right") + "</button></div>";
     h += errSummary();
+    if (S.flags.roomsRescaled && rooms.length) h += '<p class="callout" role="status">' + ic("i-info") + "<span>Pakeitėte bendrą plotą, todėl patalpų plotus perskaičiavome proporcingai. Patikrinkite juos.</span></p>";
+    if (!rooms.length) h += '<p class="callout warn" id="fs-rooms" tabindex="-1">' + ic("i-info") + "<span>Patalpų sąraše nieko nėra. Pridėkite patalpą, atstatykite pradinį sąrašą arba praleiskite žingsnį.</span></p>";
     var sum = rooms.reduce(function (s, r) { return s + (parseFloat(String(r.area).replace(",", ".")) || 0); }, 0);
     h += '<div class="rooms">';
     rooms.forEach(function (r, i) {
@@ -274,8 +321,8 @@
   }
 
   function lowConf(key, tierIdx) {
-    var m = R.MATERIALS[key]; var ref = m.refs ? m.refs[tierIdx] : m.ref; var it = P.items[ref];
-    return it && (it.conf === "C" || it.conf === "N");
+    var t = R.MATERIALS[key].tiers[tierIdx];
+    return t && (t.conf === "C" || t.conf === "N");
   }
   function step6() {
     var a = S.a, h = head("Medžiagos", "Pasirinkite medžiagas. Nežinote? Palikite „Vidutinė“.");
@@ -283,25 +330,25 @@
     if (a.buyer === "client") h += '<p class="callout">' + ic("i-info") + "<span>Medžiagų kainos žemiau rodomos tik informacijai. Į sumą jos neįtraukiamos.</span></p>";
     var W = R.worksState(a, a.customRooms);
     if (W.w_floor) {
-      h += radios("floorDry", "Grindys: svetainė ir miegamieji", [{ v: "laminate", label: "Laminatas" }, { v: "vinyl", label: "Vinilas" }, { v: "parquet", label: "Parketlentės" }], a.floorDry, { cols: "c3" });
-      h += radios("floorWet", "Grindys: virtuvė ir koridorius", [{ v: "tile", label: "Plytelės" }, { v: "vinyl", label: "Vinilas" }], a.floorWet, { cols: "c2", hint: "Vonios grindys skaičiuojamos kartu su vonios plytelėmis." });
+      h += radios("floorDry", "Grindys: kambariai (svetainė su virtuve, miegamieji)", [{ v: "laminate", label: "Laminatas" }, { v: "vinyl", label: "Vinilas" }, { v: "parquet", label: "Parketlentės" }], a.floorDry, { cols: "c3" });
+      h += radios("floorWet", "Grindys: koridorius ir atskira virtuvė", [{ v: "tile", label: "Plytelės" }, { v: "vinyl", label: "Vinilas" }], a.floorWet, { cols: "c2", hint: "Vonios grindys skaičiuojamos kartu su vonios plytelėmis." });
     }
     h += ceilingRadios("ceiling6");
     if (W.w_bath_tile) h += radios("tileHeight", "Plytelės vonios sienose", [{ v: "2.0", label: "Iki 2 m aukščio" }, { v: "ceiling", label: "Iki lubų" }], a.tileHeight, { cols: "c2" });
     var rel = relevantMaterials();
-    h += '<h3 class="sub-h">Medžiagų klasė</h3><p class="hint">Kainos už vienetą, ' + vatLbl() + ". Pavyzdžiai iš mažmeninių parduotuvių 2026 m. lapkritį.</p>";
+    h += '<h3 class="sub-h">Medžiagų klasė</h3><p class="hint">Kainos už vienetą, ' + vatLbl() + ". Pavyzdžiai iš mažmeninių parduotuvių (2026 m. lapkritis, įprasta kaina be lojalumo kortelės). Kai yra dvi parduotuvės, rodomas jų vidurkis.</p>";
     rel.forEach(function (key) {
       var m = R.MATERIALS[key], cur = a.mat[key];
       h += '<fieldset class="q mat"><legend class="q-l">' + m.label + '</legend><div class="opts c4">';
       [1, 2, 3, 0].forEach(function (t) {
         var id = "m-" + key + "-" + t, tier = t ? m.tiers[t - 1] : null;
-        var p = tier ? (a.vat === "incl" ? tier.price : tier.price / 1.21) : null;
-        var note = t && lowConf(key, t - 1) ? '<span class="opt-n">Kaina orientacinė, patikrinsime su tiekėju.</span>' : "";
+        var p = tier ? tier.net * (a.vat === "incl" ? 1 + CFG.vatRate : 1) : null;
+        var note = tier && tier.missing ? '<span class="opt-n">Šios klasės kainos nėra, skaičiuojama artimiausia klasė.</span>' : t && lowConf(key, t - 1) ? '<span class="opt-n">Kaina orientacinė, patikrinsime su tiekėju.</span>' : "";
         h += '<label class="opt mat-o" for="' + id + '"><input class="sr-only" type="radio" name="mat-' + key + '" id="' + id + '" value="' + t + '" data-mat="' + key + '"' + (cur === t ? " checked" : "") + '><span class="opt-in"><span class="opt-t">' + (t === 1 ? "Ekonominė" : t === 2 ? "Vidutinė" : t === 3 ? "Aukštesnė" : "Nežinau") + "</span>" + (tier ? '<span class="opt-p">' + price(p) + " / " + m.unit + '</span><span class="opt-d">' + esc(tier.example) + "</span>" : '<span class="opt-d">Skaičiuosime vidutinę, o intervalas bus platesnis.</span>') + note + "</span></label>";
       });
       h += "</div></fieldset>";
     });
-    h += '<p class="fine">Prekių ženklai yra tik kainų pavyzdžiai. Langai, baldai, buitinė technika ir šildymo įranga į skaičiuoklę neįtraukti.</p>';
+    h += '<p class="fine">Prekių ženklai yra tik kainų pavyzdžiai. Langai, baldai, buitinė technika, katilai ir šilumos siurbliai į skaičiuoklę neįtraukti.</p>';
     return h + navButtons();
   }
 
@@ -329,7 +376,7 @@
     });
     var alt = "Diagrama: " + parts.map(function (p, i) { return p[0].toLowerCase() + " " + pct[i] + " proc."; }).join(", ");
     var legend = '<table class="legend"><caption class="sr-only">Kainos dalys</caption><thead><tr><th scope="col">Dalis</th><th scope="col" class="num">Suma</th><th scope="col" class="num">Dalis</th></tr></thead><tbody>' + parts.map(function (p, i) { return '<tr><th scope="row"><span class="sw ' + p[3] + '" aria-hidden="true"></span>' + p[0] + (p[0] === "Rezervas" ? " (" + Math.round(r.reservePct * 100) + " proc.)" + term("rezervas") : "") + '</th><td class="num">' + eur(p[1]) + '</td><td class="num">' + pct[i] + " proc.</td></tr>"; }).join("") + "</tbody></table>";
-    return '<figure class="donut-fig"><svg class="donut" viewBox="0 0 140 140" role="img" aria-label="' + alt + '"><circle cx="70" cy="70" r="52" fill="none" stroke="#ece6dc" stroke-width="22"/>' + segs + '<text x="70" y="66" text-anchor="middle" class="d-k">apie</text><text x="70" y="84" text-anchor="middle" class="d-v">' + shortK(r.total.mid) + "</text></svg>" + '<figcaption class="sr-only">' + alt + "</figcaption>" + legend + "</figure>";
+    return '<figure class="donut-fig"><svg class="donut" viewBox="0 0 140 140" role="img" aria-label="' + alt + '"><circle cx="70" cy="70" r="52" fill="none" stroke="#ece6dc" stroke-width="22"/>' + segs + '<text x="70" y="66" text-anchor="middle" class="d-k">apie</text><text x="70" y="84" text-anchor="middle" class="d-v">' + shortK(r.total.mid) + "</text></svg>" + '<figcaption class="sr-only">' + alt + '</figcaption><div class="table-wrap">' + legend + "</div></figure>";
   }
   function shortK(v) { return v >= 10000 ? dec(v / 1000, 1) + " tūkst." : fmt(v); }
 
@@ -364,11 +411,14 @@
         '</tbody><tfoot><tr><th scope="row">Iš viso</th><td></td><td class="num">' + eur(g.labour) + '</td><td class="num">' + eur(g.materials) + "</td></tr></tfoot></table></div></details>";
     });
     h += '</div><div class="g-legend" aria-hidden="true"><span><i class="sw seg-l"></i>Darbai</span><span><i class="sw seg-m"></i>Medžiagos</span></div>';
-    h += '<p class="tot-row"><span>Darbai</span><strong>' + eur(r.split.labour) + "</strong></p><p class=\"tot-row\"><span>Medžiagos</span><strong>" + eur(r.split.materials) + '</strong></p><p class="tot-row"><span>Rezervas (' + Math.round(r.reservePct * 100) + " proc.)</span><strong>" + eur(r.split.reserve) + "</strong></p>" + (r.split.design ? '<p class="tot-row"><span>Interjero projektas</span><strong>' + eur(r.split.design) + "</strong></p>" : "") + '<p class="tot-row sum"><span>Iš viso, vidutinis scenarijus</span><strong>' + eur(r.raw.mid) + "</strong></p></section>";
+    h += '<p class="tot-row"><span>Darbai</span><strong>' + eur(r.split.labour) + "</strong></p><p class=\"tot-row\"><span>Medžiagos</span><strong>" + eur(r.split.materials) + '</strong></p><p class="tot-row"><span>Rezervas (' + Math.round(r.reservePct * 100) + " proc.)</span><strong>" + eur(r.split.reserve) + "</strong></p>" + (r.split.design ? '<p class="tot-row"><span>Interjero projektas</span><strong>' + eur(r.split.design) + "</strong></p>" : "") + '<p class="tot-row sum"><span>Iš viso, vidutinis scenarijus</span><strong>' + eur(r.raw.mid) + '</strong></p><p class="fine">Viršuje ta pati suma suapvalinta: apie ' + eur(r.total.mid) + ", " + vatLbl() + ".</p></section>";
+
+    // Pasirenkami paketai: kas įtraukta ir kiek tai keičia sumą
+    h += '<section class="card" aria-labelledby="h-pkg"><h3 id="h-pkg">Pasirenkami darbų paketai</h3><ul class="chg pk-list">' + pkgImpact().map(function (p) { return "<li><span>" + esc(p.label) + '<span class="pk-st">' + (p.on ? "Įtraukta į sumą" : "Neįtraukta") + '</span></span><strong class="nb">' + pkgShort(p) + "</strong></li>"; }).join("") + '</ul><p class="fine">Sumos su rezervu, ' + vatLbl() + '. Kiekvieno paketo pokytis skaičiuojamas atskirai, kitus pasirinkimus paliekant tokius, kokie yra. Kai įjungti abu lyginimo paketai, kambariuose sausas lyginimas pakeičia tinką. Paketus galite keisti žingsnyje „Darbai“.</p></section>';
 
     // Medžiagų sąrašas
     var ml = materialList(r);
-    h += '<section class="card" aria-labelledby="h-mat"><h3 id="h-mat">Medžiagų sąrašas</h3>' + (ml.length ? '<div class="table-wrap"><table class="lines"><caption class="sr-only">Medžiagų sąrašas</caption><thead><tr><th scope="col">Medžiaga</th><th scope="col">Klasė</th><th scope="col" class="num">Kiekis</th><th scope="col" class="num">Vnt. kaina</th><th scope="col" class="num">Suma</th></tr></thead><tbody>' + ml.map(function (m) { return '<tr><th scope="row">' + esc(m.label) + "</th><td>" + m.tierName + '</td><td class="num">' + dec(m.qty, m.qty < 10 ? 1 : 0) + " " + m.unit + '</td><td class="num">' + (m.unitPrice != null ? price(m.unitPrice) : "") + '</td><td class="num">' + eur(m.cost) + "</td></tr>"; }).join("") + "</tbody></table></div>" : '<p>Medžiagas pirksite patys, todėl sąrašas neparengtas.</p>') + '<p class="fine">Kiekiai su atsargomis nuostoliams. ' + (r.byClient ? "" : "Sumos įtrauktos į kainą.") + "</p></section>";
+    h += '<section class="card" aria-labelledby="h-mat"><h3 id="h-mat">Medžiagų sąrašas</h3>' + (ml.length ? '<div class="table-wrap"><table class="lines"><caption class="sr-only">Medžiagų sąrašas</caption><thead><tr><th scope="col">Medžiaga</th><th scope="col">Klasė</th><th scope="col" class="num">Kiekis</th><th scope="col" class="num">Vnt. kaina</th><th scope="col" class="num">Suma</th></tr></thead><tbody>' + ml.map(function (m) { return '<tr><th scope="row">' + esc(m.label) + (m.weak ? ' <span class="weak" title="Kaina orientacinė">*</span>' : "") + "</th><td>" + m.tierName + '</td><td class="num">' + dec(m.qty, m.qty < 10 ? 1 : 0) + " " + m.unit + '</td><td class="num">' + (m.unitPrice != null ? price(m.unitPrice) : "") + '</td><td class="num">' + eur(m.cost) + "</td></tr>"; }).join("") + "</tbody></table></div>" : '<p>Medžiagas pirksite patys, todėl sąrašas neparengtas.</p>') + '<p class="fine">Kiekiai su atsargomis nuostoliams. Kainos ' + vatLbl() + ". " + (r.byClient ? "" : "Sumos įtrauktos į kainą. ") + (ml.some(function (m) { return m.weak; }) ? "* Kaina orientacinė: vienas šaltinis, konkurento modelis arba mūsų prielaida. Patikrinsime su tiekėju." : "") + "</p></section>";
 
     // Kas neįeina, kaip skaityti
     h += '<div class="res-grid"><section class="card" aria-labelledby="h-ex"><h3 id="h-ex">Kas neįeina</h3><ul class="dash">' + r.excluded.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + r.notes.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></section>";
@@ -381,7 +431,7 @@
       '<button type="button" class="btn ghost" data-act="csv">' + ic("i-download") + "<span>Atsisiųsti CSV</span></button>" +
       '<a class="btn ghost" href="' + telHref() + '">' + ic("i-phone") + "<span>Skambinti " + esc(c.phone) + "</span></a>" +
       '<button type="button" class="btn ghost" data-act="edit">' + ic("i-edit") + "<span>Keisti atsakymus</span></button></div>" +
-      '<p class="fine">' + esc(c.name) + ", " + esc(c.hours) + ", " + esc(c.city) + ". Atsakome per " + c.responseHours + " darbo valandas.</p></section>";
+      '<p class="fine">' + esc(c.name) + ", " + esc(c.hours) + ", " + esc(c.city) + '. El. paštas <a class="inline-link" href="mailto:' + esc(c.email) + '">' + esc(c.email) + "</a>. Atsakome per " + hoursTxt(c.responseHours) + ".</p></section>";
     return h + "</div>";
   }
   function materialList(r) {
@@ -390,7 +440,7 @@
       var k = m.key + "|" + m.unit + "|" + m.tier;
       if (!map[k]) { map[k] = { label: m.label, qty: 0, unit: m.unit, unitPrice: m.unitPrice, cost: 0, tierName: m.tier === 1 ? "Ekonominė" : m.tier === 2 ? "Vidutinė" : m.tier === 3 ? "Aukštesnė" : m.tier === 0 ? "Nežinau" : "Viena kaina" }; out.push(map[k]); }
       map[k].qty += m.qty; map[k].cost += m.cost;
-      if (/Rozetės/.test(m.label)) map[k].label = "Rozetės ir jungikliai";
+      if (m.conf === "C" || m.conf === "N" || m.key === "consumables") map[k].weak = true;
     }); }); });
     return out;
   }
@@ -398,7 +448,7 @@
   // ---------- kontaktai ----------
   function step9() {
     var ct = S.contact, pv = CFG.privacy, c = CFG.company;
-    var h = head("Kontaktai", "Paliksite kontaktus, ir " + esc(c.name) + " paruoš tikslią sąmatą. Jūsų atsakymai bus perkelti į laišką.");
+    var h = head("Kontaktai", "Palikite kontaktus, o " + esc(c.name) + " paruoš tikslią sąmatą. Jūsų atsakymai bus perkelti į laišką.");
     if (S.sent) return h + sentView();
     h += errSummary();
     h += '<form class="cform" id="cform" novalidate>';
@@ -427,7 +477,7 @@
   }
   function sentView() {
     var c = CFG.company, href = S.sent.href;
-    return '<div class="sent card"><p class="sent-ic">' + ic("i-check", "big-ic") + "</p><h3>Ačiū, " + esc(S.contact.name) + ". Laiškas paruoštas.</h3><p>Paskutinis žingsnis: atidarykite laišką ir paspauskite „Siųsti“ savo el. pašto programoje. Gavę laišką susisieksime per " + c.responseHours + " darbo valandas.</p>" +
+    return '<div class="sent card"><p class="sent-ic">' + ic("i-check", "big-ic") + "</p><h3>Ačiū, " + esc(S.contact.name) + ". Laiškas paruoštas.</h3><p>Paskutinis žingsnis: atidarykite laišką ir paspauskite „Siųsti“ savo el. pašto programoje. Gavę laišką susisieksime per " + hoursTxt(c.responseHours) + ".</p>" +
       '<div class="act-grid"><a class="btn primary lg" id="mailtoLink" href="' + esc(href) + '">' + ic("i-mail") + "<span>Atidaryti laišką</span></a>" +
       '<button type="button" class="btn ghost" data-act="csv">' + ic("i-download") + "<span>Atsisiųsti CSV</span></button>" +
       '<button type="button" class="btn ghost" data-act="print">' + ic("i-print") + "<span>Spausdinti arba išsaugoti PDF</span></button>" +
@@ -439,7 +489,7 @@
   var TXT = {
     type: { flat: "Butas", house: "Namas", room: "Atskira patalpa" },
     roomKind: { bath: "vonia", kitchen: "virtuvė", room: "kambarys", hall: "koridorius" },
-    age: { new: "Nauja statyba", old_pre: "Sena statyba iki 1990 m.", old_post: "Sena statyba po 1990 m.", unknown: "Nežinoma" },
+    age: { new: "Nauja statyba", old_pre: "Sena statyba (iki 1990 m.)", old_post: "Sena statyba (po 1990 m.)", unknown: "Nežinoma" },
     state: { good: "Gera", medium: "Vidutinė", bad: "Bloga", shell: "Nauja statyba be apdailos" },
     walls: { even: "Lygios", slight: "Šiek tiek nelygios", very: "Labai nelygios", unknown: "Nežinoma" },
     damp: { no: "Ne", yes: "Taip", unknown: "Nežinoma" },
@@ -470,23 +520,39 @@
     lines = lines.concat(summaryLines(r));
     lines.push("", "Grupės (apie, " + vatLbl() + "):");
     r.groups.forEach(function (g) { if (g.total > 0) lines.push("- " + g.label + ": " + plain(g.total) + " EUR"); });
-    if (S.a.notes) lines.push("", "Pastabos: " + S.a.notes.slice(0, 500));
-    lines.push("", "Sutikimas tvarkyti duomenis: taip (teksto versija " + CFG.privacy.consentVersion + ", " + new Date().toISOString() + ")", "Rinkodaros sutikimas: " + (ct.marketing ? "taip" : "ne"), "Skaičiuoklės versija: " + R.C.version);
+    var tail = ["", "Sutikimas tvarkyti duomenis: taip (teksto versija " + CFG.privacy.consentVersion + ", " + new Date().toISOString() + ")", "Rinkodaros sutikimas: " + (ct.marketing ? "taip" : "ne"), "Skaičiuoklės versija: " + R.C.version];
     var subject = "Remonto sąmatos užklausa: " + LEVEL_INFO[r.level].t + ", " + dec(r.area, 0) + " m2, " + cityLabel(S.a.city);
-    return "mailto:" + c.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+    var head0 = "mailto:" + c.email + "?subject=" + encodeURIComponent(subject) + "&body=";
+    var mk = function (notes) { return head0 + encodeURIComponent(lines.concat(notes ? ["", "Pastabos: " + notes] : [], tail).join("\n")); };
+    // Kai kurios el. pašto programos (pvz. Outlook per Windows) nukerpa ilgas mailto nuorodas, todėl laikomės iki 2000 simbolių.
+    // Lietuviškos raidės užkoduotos užima 6 simbolius, todėl ilgos pastabos sutrumpinamos, o visas tekstas lieka CSV faile.
+    var LIMIT = 2000, notes = (S.a.notes || "").slice(0, 500), href = mk(notes);
+    if (notes && href.length > LIMIT) {
+      var cut = notes.length;
+      while (cut > 0 && mk(notes.slice(0, cut) + " ... (sutrumpinta, visas tekstas CSV faile)").length > LIMIT) cut -= 10;
+      href = mk(cut > 0 ? notes.slice(0, cut) + " ... (sutrumpinta, visas tekstas CSV faile)" : "(pastabos per ilgos laiškui, jos yra CSV faile)");
+    }
+    return href;
   }
   function csvText(r) {
-    var q = function (v) { var s = String(v == null ? "" : v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+    // Langeliai, prasidedantys = + - @ ar tabuliacija, Excel gali vykdyti kaip formulę: priekyje dedamas apostrofas.
+    var q = function (v) { var s = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return /[";\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
     var n2 = function (v) { return (Math.round(v * 100) / 100).toFixed(2).replace(".", ","); };
+    var V = " (" + vatLbl() + ")";
     var rows = [["Remonto kainos skaičiuoklė", CFG.company.name], ["Data", new Date().toISOString().slice(0, 10)], ["Kainų versija", R.C.version], ["PVM", vatLbl()], []];
     summaryLines(r).forEach(function (l) { rows.push([l]); });
-    rows.push([], ["Grupė", "Eilutė", "Kiekis", "Vnt.", "Darbai EUR", "Medžiagos EUR", "Iš viso EUR"]);
+    rows.push([], ["Grupė", "Eilutė", "Kiekis", "Vnt.", "Darbai EUR" + V, "Medžiagos EUR" + V, "Iš viso EUR" + V]);
     r.groups.forEach(function (g) { g.lines.forEach(function (l) { rows.push([g.label, l.label, l.code ? n2(l.qty) : "", l.unit, n2(l.labour), n2(l.materials), n2(l.labour + l.materials)]); }); });
     rows.push(["Rezervas", Math.round(r.reservePct * 100) + " proc.", "", "", "", "", n2(r.split.reserve)]);
     if (r.split.design) rows.push(["Interjero projektas", "", "", "", "", "", n2(r.split.design)]);
-    rows.push(["Iš viso (apie)", "", "", "", n2(r.split.labour), n2(r.split.materials), n2(r.raw.mid)], ["Intervalas", "nuo " + r.total.low, "iki " + r.total.high], []);
-    rows.push(["Medžiaga", "Klasė", "Kiekis", "Vnt.", "Vnt. kaina EUR", "Suma EUR"]);
-    materialList(r).forEach(function (m) { rows.push([m.label, m.tierName, n2(m.qty), m.unit, m.unitPrice != null ? n2(m.unitPrice) : "", n2(m.cost)]); });
+    rows.push(["Iš viso (apie)", "", "", "", n2(r.split.labour), n2(r.split.materials), n2(r.raw.mid)], ["Suapvalinta (apie)", "", "", "", "", "", n2(r.total.mid)], ["Intervalas EUR" + V, "nuo " + r.total.low, "iki " + r.total.high], []);
+    rows.push(["Paketas", "Būsena", "Keičia sumą EUR" + V + ", su rezervu"]);
+    pkgImpact().forEach(function (p) { rows.push([p.label, p.on ? "įtraukta" : "neįtraukta", n2(p.delta)]); });
+    rows.push([]);
+    rows.push(["Medžiaga", "Klasė", "Kiekis", "Vnt.", "Vnt. kaina EUR" + V, "Suma EUR" + V, "Patikimumas"]);
+    materialList(r).forEach(function (m) { rows.push([m.label, m.tierName, n2(m.qty), m.unit, m.unitPrice != null ? n2(m.unitPrice) : "", n2(m.cost), m.weak ? "orientacinė" : ""]); });
+    rows.push([], ["Kas neįeina"]); r.excluded.concat(r.notes).forEach(function (x) { rows.push([x]); });
+    if (S.a.notes) rows.push([], ["Pastabos", S.a.notes.slice(0, 500)]);
     rows.push([], ["Tai preliminarus įvertis, ne pasiūlymas. Tikslią kainą parodo sąmata po apžiūros."]);
     return "﻿" + rows.map(function (rw) { return rw.map(q).join(";"); }).join("\r\n");
   }
@@ -502,9 +568,9 @@
     var h = '<div class="ps-head"><span class="logo">' + esc(c.logoText) + "</span><div><p class=\"ps-co\">" + esc(c.name) + '</p><p>Preliminarus remonto įvertis, ' + new Date().toLocaleDateString("lt-LT") + ". Kainų versija " + R.C.version + ".</p></div></div>";
     h += "<h2>Rezultatas</h2><p class=\"ps-big\">nuo " + eur(r.total.low) + " iki " + eur(r.total.high) + "</p><p>Dažniausiai apie " + eur(r.total.mid) + " (apie " + fmt(r.perM2.mid) + " EUR/m2), " + vatLbl() + ". Tikslumas: " + R.C.accuracy[r.accuracy].label + ".</p>";
     h += "<h3>Pagrindiniai duomenys</h3><ul>" + summaryLines(r).slice(0, 3).map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ul>";
-    h += '<h3>Pagal grupes</h3><table><thead><tr><th>Grupė</th><th class="num">Darbai</th><th class="num">Medžiagos</th><th class="num">Iš viso</th></tr></thead><tbody>' + r.groups.filter(function (g) { return g.total > 0; }).map(function (g) { return "<tr><td>" + g.label + '</td><td class="num">' + eur(g.labour) + '</td><td class="num">' + eur(g.materials) + '</td><td class="num">' + eur(g.total) + "</td></tr>"; }).join("") + '<tr><td>Rezervas (' + Math.round(r.reservePct * 100) + ' proc.)</td><td></td><td></td><td class="num">' + eur(r.split.reserve) + "</td></tr>" + (r.split.design ? '<tr><td>Interjero projektas</td><td></td><td></td><td class="num">' + eur(r.split.design) + "</td></tr>" : "") + '<tr class="b"><td>Iš viso (apie)</td><td class="num">' + eur(r.split.labour) + '</td><td class="num">' + eur(r.split.materials) + '</td><td class="num">' + eur(r.raw.mid) + "</td></tr></tbody></table>";
+    h += '<h3>Pagal grupes</h3><table><thead><tr><th>Grupė</th><th class="num">Darbai</th><th class="num">Medžiagos</th><th class="num">Iš viso</th></tr></thead><tbody>' + r.groups.filter(function (g) { return g.total > 0; }).map(function (g) { return "<tr><td>" + g.label + '</td><td class="num">' + eur(g.labour) + '</td><td class="num">' + eur(g.materials) + '</td><td class="num">' + eur(g.total) + "</td></tr>"; }).join("") + '<tr><td>Rezervas (' + Math.round(r.reservePct * 100) + ' proc.)</td><td></td><td></td><td class="num">' + eur(r.split.reserve) + "</td></tr>" + (r.split.design ? '<tr><td>Interjero projektas</td><td></td><td></td><td class="num">' + eur(r.split.design) + "</td></tr>" : "") + '<tr class="b"><td>Iš viso, vidutinis scenarijus</td><td class="num">' + eur(r.split.labour) + '</td><td class="num">' + eur(r.split.materials) + '</td><td class="num">' + eur(r.raw.mid) + "</td></tr></tbody></table><p>Sumos " + vatLbl() + ". Suapvalinta: apie " + eur(r.total.mid) + ".</p>";
     var ml = materialList(r);
-    if (ml.length) h += '<h3>Pasirinktos medžiagos</h3><table><thead><tr><th>Medžiaga</th><th>Klasė</th><th class="num">Kiekis</th><th class="num">Vnt. kaina</th></tr></thead><tbody>' + ml.map(function (m) { return "<tr><td>" + esc(m.label) + "</td><td>" + m.tierName + '</td><td class="num">' + dec(m.qty, 1) + " " + m.unit + '</td><td class="num">' + (m.unitPrice != null ? price(m.unitPrice) : "") + "</td></tr>"; }).join("") + "</tbody></table>";
+    if (ml.length) h += '<h3>Pasirinktos medžiagos</h3><table><thead><tr><th>Medžiaga</th><th>Klasė</th><th class="num">Kiekis</th><th class="num">Vnt. kaina</th></tr></thead><tbody>' + ml.map(function (m) { return "<tr><td>" + esc(m.label) + (m.weak ? " *" : "") + "</td><td>" + m.tierName + '</td><td class="num">' + dec(m.qty, 1) + " " + m.unit + '</td><td class="num">' + (m.unitPrice != null ? price(m.unitPrice) : "") + "</td></tr>"; }).join("") + "</tbody></table><p>Kainos " + vatLbl() + ". * Kaina orientacinė.</p>";
     h += "<h3>Trukmė</h3><p>Apie " + r.timeline[0] + "-" + r.timeline[1] + " savaičių nuo darbų pradžios, be medžiagų užsakymo laiko.</p>";
     h += "<h3>Kas neįeina</h3><p>" + r.excluded.concat(r.notes).map(esc).join(". ") + ".</p>";
     h += "<h3>Prielaidos</h3><p>Regiono koeficientas " + dec(r.region, 2) + " (" + esc(cityLabel(a.city)) + "), rezervas " + Math.round(r.reservePct * 100) + " proc., kambarių paskirstymas " + (S.flags.roomsCustom ? "pagal jūsų patalpas" : "standartinis") + ". Visas prielaidų sąrašas skaičiuoklės puslapyje.</p>";
@@ -549,7 +615,13 @@
     if (liveTimer) clearTimeout(liveTimer);
     var run = function () {
       var lv = document.getElementById("liveValue"), mb = document.getElementById("mbarValue");
-      if (S.maxStep < 3) { lv.textContent = "Dar nepakanka duomenų"; mb.textContent = "Dar nepakanka duomenų"; document.getElementById("liveSub").textContent = "Rezultatą parodysime po remonto lygio pasirinkimo."; document.getElementById("liveSplit").innerHTML = ""; document.getElementById("liveAcc").innerHTML = ""; return; }
+      var bad = !areaValid(parseNum(S.a.area));
+      if (S.maxStep < 3 || bad) {
+        var lim = areaLimits(), msg = bad ? "Patikrinkite plotą" : "Dar nepakanka duomenų";
+        lv.textContent = msg; mb.textContent = msg; lv.removeAttribute("data-txt");
+        document.getElementById("liveSub").textContent = bad ? "Plotas turi būti nuo " + lim[0] + " iki " + lim[1] + " m2." : "Rezultatą parodysime po remonto lygio pasirinkimo.";
+        document.getElementById("liveSplit").innerHTML = ""; document.getElementById("liveAcc").innerHTML = ""; return;
+      }
       var r = calc();
       var txt = "nuo " + eur(r.total.low) + " iki " + eur(r.total.high);
       lv.innerHTML = '<span class="lv-k">Dabar:</span> nuo <span class="nb">' + eur(r.total.low) + '</span> iki <span class="nb">' + eur(r.total.high) + "</span>";
@@ -558,6 +630,11 @@
       var accIdx = { approx: 1, medium: 2, good: 3 }[r.accuracy];
       document.getElementById("liveAcc").innerHTML = '<div class="acc-bar sm" aria-hidden="true">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= accIdx ? "on" : "") + '"></span>'; }).join("") + "</div><span>Tikslumas: " + R.C.accuracy[r.accuracy].label + "</span>";
       document.getElementById("liveSplit").innerHTML = "<li><span>Darbai</span><strong>" + eur(r.split.labour) + "</strong></li><li><span>Medžiagos</span><strong>" + eur(r.split.materials) + "</strong></li><li><span>Rezervas</span><strong>" + eur(r.split.reserve) + "</strong></li>" + (r.split.design ? "<li><span>Projektas</span><strong>" + eur(r.split.design) + "</strong></li>" : "");
+      // Įjungti paketai: kiek kiekvienas sudaro dabartinėje sumoje (jau įskaičiuota į eilutes viršuje)
+      if (S.maxStep >= 4) {
+        var pon = pkgImpact().filter(function (p) { return p.on; });
+        if (pon.length) document.getElementById("liveSplit").innerHTML += '<li class="lv-pk-h"><span>Iš jų paketai</span></li>' + pon.map(function (p) { return '<li class="lv-pk"><span>' + esc(p.label) + "</span><strong>" + pkgShort(p) + "</strong></li>"; }).join("");
+      }
       lv.setAttribute("data-txt", txt);
     };
     if (now) run(); else liveTimer = setTimeout(run, 300);
@@ -574,11 +651,12 @@
       if (a.heightOpt === "3.0") { var Hh = parseNum(a.heightExact); if (isNaN(Hh) || Hh < 3 || Hh > 5) e.heightExact = "Lubų aukštis turi būti nuo 3,0 iki 5,0 m."; }
     }
     if (step === 4) {
-      Object.keys(a.qty).forEach(function (k) { var v = parseNum(a.qty[k]); if (isNaN(v) || v < 0 || v > 300 || Math.round(v) !== v) e["qty-" + k] = "Įrašykite sveiką skaičių nuo 0 iki 300."; });
+      // Tikrinami tik matomi laukai: paslėpto (išjungto darbo) lauko klaida būtų nepasiekiama.
+      Object.keys(a.qty).filter(function (k) { return !!document.getElementById("qty-" + k); }).forEach(function (k) { var v = parseNum(a.qty[k]); if (isNaN(v) || v < 0 || v > 300 || Math.round(v) !== v) e["qty-" + k] = "Įrašykite sveiką skaičių nuo 0 iki 300."; });
     }
     if (step === 5 && a.customRooms) {
       a.customRooms.forEach(function (r, i) {
-        var A2 = parseNum(r.area); if (isNaN(A2) || A2 <= 0 || A2 > 300) e["ra-" + i + "-area"] = "Patalpos " + (i + 1) + " plotas turi būti nuo 0,5 iki 300 m2.";
+        var A2 = parseNum(r.area); if (isNaN(A2) || A2 < 0.5 || A2 > 300) e["ra-" + i + "-area"] = "Patalpos " + (i + 1) + " plotas turi būti nuo 0,5 iki 300 m2.";
         ["windows", "doors"].forEach(function (k) { var v = parseNum(r[k]); if (isNaN(v) || v < 0 || v > 20 || Math.round(v) !== v) e["r" + k[0] + "-" + i + "-" + k] = "Patalpos " + (i + 1) + " " + (k === "windows" ? "langų" : "durų") + " skaičius turi būti sveikas, nuo 0 iki 20."; });
       });
       if (!a.customRooms.length) e.rooms = "Pridėkite bent vieną patalpą arba praleiskite žingsnį.";
@@ -598,9 +676,18 @@
   }
 
   // ---------- navigacija ----------
-  function go(n) {
+  // Naršyklės "Atgal" grąžina į ankstesnį žingsnį, o ne išveda iš puslapio (atsakymai lieka atmintyje).
+  function go(n, fromHistory) {
     S.step = n; S.maxStep = Math.max(S.maxStep, n); S.errors = {};
+    if (!fromHistory && window.history && history.pushState) { try { if (!history.state || history.state.step !== n) history.pushState({ step: n }, ""); } catch (e) { /* */ } }
     render(true);
+  }
+  function onPop(e) {
+    var st = e.state && typeof e.state.step === "number" ? e.state.step : null;
+    if (st === null || st === S.step) return;
+    if (st > S.maxStep) st = S.maxStep;
+    if (st === 9 && !S.sent && S.step !== 8) st = 8;
+    go(st, true);
   }
   function next() {
     var st = S.step;
@@ -609,6 +696,7 @@
     if (st === 1 && S.a.customRooms) { S.flags.roomsCustom = false; } // plotas pasikeitė: patalpas reikia patikrinti iš naujo
     if (st === 4) S.flags.worksDone = true;
     if (st === 5) {
+      S.flags.roomsRescaled = false;
       if (S.a.customRooms) { S.a.customRooms = S.a.customRooms.map(function (r) { return { name: r.name || "Patalpa", type: r.type, area: parseNum(r.area), windows: parseNum(r.windows), doors: parseNum(r.doors), wet: !!r.wet }; }); S.flags.roomsCustom = true; }
     }
     if (st === 6) S.flags.materialsDone = true;
@@ -632,8 +720,8 @@
       if (path === "type" && v === "room" && S.a.area > 80) S.a.area = S.a.roomKind === "bath" ? 6 : 12;
       if (path === "type" && v !== "room" && S.a.area < 15) S.a.area = 55;
       if (path === "age" && S.maxStep < 2) S.a.state = v === "new" ? "good" : "medium";
-      if (path === "area" && t.type === "range") { S.a.area = parseFloat(v); var f = document.getElementById("area"); if (f) f.value = v; updateLive(false); return; }
-      if (path === "area" || path === "heightExact" || path === "notes" || path === "deadlineDate") { setPath(path, v); updateLive(false); if (path === "area") { var rg = document.getElementById("areaRange"), n = parseNum(v); if (rg && !isNaN(n)) rg.value = n; } return; }
+      if (path === "area" && t.type === "range") { S.a.area = parseFloat(v); rescaleRooms(S.a.area); var f = document.getElementById("area"); if (f) f.value = v; updateLive(false); return; }
+      if (path === "area" || path === "heightExact" || path === "notes" || path === "deadlineDate") { setPath(path, v); if (path === "area") { var rg = document.getElementById("areaRange"), n = parseNum(v); if (rg && !isNaN(n)) rg.value = n; rescaleRooms(n); } updateLive(false); return; }
       setPath(path, v);
       if (path === "ceiling" || path === "buyer" || path === "floorDry" || path === "floorWet") { /* matomos kategorijos keičiasi */ }
       render(false); return;
@@ -661,6 +749,17 @@
     if (t.dataset.bind === "notes") { S.a.notes = t.value.slice(0, 500); var c = document.getElementById("notesCount"); if (c) c.textContent = S.a.notes.length + " / 500"; return; }
     if (t.type === "range" || t.dataset.bind === "area" || t.dataset.bind === "heightExact" || t.dataset.qty || (t.dataset.room != null && t.tagName === "INPUT" && t.type === "text") || t.dataset.c) onChange({ target: t, type: "input" });
   }
+  // Pakeitus bendrą plotą, anksčiau įvestos patalpos proporcingai perskaičiuojamos.
+  // Anksčiau jos likdavo senos ir rezultatas nepaisė naujo ploto.
+  function areaValid(n) { var lim = areaLimits(); return isFinite(n) && n >= lim[0] && n <= lim[1]; }
+  function rescaleRooms(n) {
+    var cr = S.a.customRooms; if (!cr || !cr.length || !areaValid(n)) return;
+    var sum = cr.reduce(function (s, r) { return s + (parseNum(r.area) || 0); }, 0);
+    if (!(sum > 0) || Math.abs(sum - n) < 1e-9) return;
+    var f = n / sum;
+    cr.forEach(function (r) { var v = parseNum(r.area); if (v > 0) r.area = v * f; });
+    S.flags.roomsCustom = false; S.flags.roomsRescaled = true;
+  }
   function ensureRooms() { if (!S.a.customRooms) S.a.customRooms = R.defaultRooms(S.a).map(function (r) { return { name: r.name, type: r.type, area: Math.round(r.area * 10) / 10, windows: r.windows, doors: r.doors, wet: r.wet }; }); }
   function updateRoomSum() {
     var el = document.getElementById("roomSum"); if (!el) return;
@@ -679,7 +778,7 @@
     var act = b.dataset.act;
     switch (act) {
       case "start": go(1); break;
-      case "intro": S.step = 0; render(true); break;
+      case "intro": go(0); break;
       case "next": next(); break;
       case "back": go(Math.max(1, S.step - 1)); break;
       case "helper": S.helper = S.helper ? null : { el: null, pipe: null, demo: null }; render(false); break;
@@ -724,34 +823,36 @@
     if (CFG.demo && document.title.indexOf("DEMO") < 0) document.title += " | DEMO";
   }
   function priceTable() {
-    var used = {};
-    R.WORKS.forEach(function () {});
-    ["d01", "d02", "d04", "d05", "d06", "d07", "d09", "d11", "d13", "c01", "c03", "f01", "f02", "f03", "f05", "f07", "f08", "f09", "t01", "t02", "t03", "w01", "w02", "w03", "e01", "e03", "e05", "e07", "p01", "p02", "p03", "p05", "p06", "p08", "h01", "h02", "o01", "o02", "o03", "o04", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09", "m10", "m11", "m12", "m13", "m14", "m15", "m16", "m17", "m18", "m19"].forEach(function (id) { used[id] = true; });
-    var conf = P.meta.confidence_scale;
-    var rows = Object.keys(P.items).filter(function (id) { return used[id]; }).map(function (id) {
-      var it = P.items[id], n = it.net;
+    // Visos pozicijos iš data.js: abu PVM laukai, tipas, būsena, data ir šaltinis.
+    var conf = P.meta.confidence_scale, TY = { retail: "mažmena", contractor: "rangovas", estimate: "įvertis" };
+    var rows = Object.keys(P.items).map(function (id) {
+      var it = P.items[id], n = it.net, g2 = it.gross;
       var f = function (v) { return v == null ? "nėra" : dec(v, 2); };
-      return "<tr><td>" + id + "</td><th scope=\"row\">" + esc(it.name) + "</th><td>" + esc(it.unit) + '</td><td class="num">' + f(n[0]) + " / " + f(n[1]) + " / " + f(n[2]) + "</td><td>" + esc(it.vat_note) + "</td><td>" + esc(it.sources.join(", ") || "nėra") + '</td><td><span class="conf c-' + it.conf + '">' + esc(conf[it.conf]) + "</span></td></tr>";
+      var st = it.status + (it.replaces ? " (vietoj " + it.replaces + ")" : "") + (it.confirmed ? " (" + it.confirmed.by + ")" : "");
+      return "<tr><td>" + id + "</td><th scope=\"row\">" + esc(it.name) + "</th><td>" + esc(it.unit) + '</td><td class="num">' + f(n[0]) + " / " + f(n[1]) + " / " + f(n[2]) + '</td><td class="num">' + f(g2[0]) + " / " + f(g2[1]) + " / " + f(g2[2]) + "</td><td>" + esc(TY[it.type] || it.type) + "</td><td>" + esc(st) + "</td><td>" + esc(it.date) + "</td><td>" + esc(it.sources.join(", ") || "nėra") + '</td><td><span class="conf c-' + it.conf + '">' + esc(conf[it.conf]) + "</span></td></tr>";
     }).join("");
-    document.getElementById("priceTable").innerHTML = '<table class="lines ptable"><caption>Įkainiai be PVM (maž. / vid. / did.). Mažmenos kainos su PVM perskaičiuotos be PVM.</caption><thead><tr><th scope="col">Kodas</th><th scope="col">Pozicija</th><th scope="col">Vnt.</th><th scope="col" class="num">Be PVM</th><th scope="col">PVM būsena</th><th scope="col">Šaltiniai</th><th scope="col">Patikimumas</th></tr></thead><tbody>' + rows + "</tbody></table>";
+    document.getElementById("priceTable").innerHTML = '<table class="lines ptable"><caption>Įkainiai (maž. / vid. / did.) be PVM ir su PVM. Skaičiuojama iš kainos be PVM, PVM pridedamas pabaigoje. Mažmenos kainos yra įprastos, be lojalumo kortelės.</caption><thead><tr><th scope="col">Kodas</th><th scope="col">Pozicija</th><th scope="col">Vnt.</th><th scope="col" class="num">Be PVM</th><th scope="col" class="num">Su PVM</th><th scope="col">Tipas</th><th scope="col">Būsena</th><th scope="col">Data</th><th scope="col">Šaltiniai</th><th scope="col">Patikimumas</th></tr></thead><tbody>' + rows + "</tbody></table>";
     document.getElementById("sourceList").innerHTML = '<h3>Šaltiniai</h3><ul class="srcs">' + Object.keys(P.sources).map(function (k) { var s = P.sources[k]; return "<li><strong>" + k + "</strong> <span>" + esc(s.url) + "</span> <span class=\"muted\">" + esc(s.date) + ". " + esc(s.note) + "</span></li>"; }).join("") + "</ul>";
   }
   var ASSUME = [
-    "Kainos rodomos su 21 proc. PVM. Kur šaltinis PVM nenurodė, kaina laikyta be PVM. Mažmenos kainos laikytos su PVM.",
-    "Regioniniai koeficientai taikomi tik darbui: Vilnius 1,00, Kaunas 0,95, Klaipėda 0,95, Šiauliai, Panevėžys ir kiti miestai 0,90, miesteliai ir kaimai 0,85. Patvirtinimo šaltinio nėra. Keičiami config.js.",
+    "Pagal nutylėjimą kainos rodomos su 21 proc. PVM. Visa skaičiuojama iš kainų be PVM, PVM pridedamas vieną kartą pabaigoje. Jungikliu „Rodyti kainas be PVM“ visos sumos dalijamos iš 1,21. Kur šaltinis PVM nenurodė, rangovo kaina laikyta be PVM, mažmenos kaina su PVM.",
+    "Mažmenos kainos yra įprastos (be lojalumo ar klubo kortelės). Kai medžiagos klasė turi kelis patikimus šaltinius (pvz. Moki-Veži ir Senukai), imamas jų vidurkis. Apskaičiuotos Ermitažo ir „nuo“ ARSAN kainos į vidurkį neįtraukiamos.",
+    "Paketai „Sienų tinkavimas ir lyginimas“, „Sausas lyginimas (gipso kartonas)“ ir „Pilna elektros instaliacija su skydeliu“ įjungti pilnam ir prabangiam lygiui. Kai įjungti abu lyginimo paketai, kambariai lyginami gipso kartonu, o vonia, virtuvė ir koridorius tinkuojami. Tinko medžiagų kaina yra konkurento modelio įvertis (5,5 EUR/m2).",
+    "Medžiagų normos be šaltinio (prielaidos): gruntas 0,15 l/m2, gipso kartono atsarga 10 proc., profiliai CD kas 0,6 m, grindjuosčių atsarga 7 proc., tapetų 10 proc., santechnikos taškui 8 m vamzdžio, 8 jungtys ir 2 m nuotekų, durims 3 vyriai, skydeliui 4 + 2 x kambariai automatinių išjungiklių, po vieną lubinį šviestuvą kambariui, kiti šviestuvai yra LED panelės.",
+    "@REGIONS",
     "Kambarių paskirstymas pagal kambarių skaičių (pvz. 2 kambariai: svetainė ir virtuvė 35 proc., miegamasis 25, vonia 10, koridorius 30). Kai vonių daugiau, dalys perskaičiuojamos proporcingai.",
     "Patalpos laikomos stačiakampėmis: kambariai 1:1,3, vonia, virtuvė ir koridorius 1:2. Langas 2,25 m2, durys 1,6 m2.",
-    "Numatyti kiekiai: elektros taškai 6 + 3 x kambariai, santechnikos taškai 2 x vonios + 2, durys kambariai + vonios + 1, radiatoriai kambariai + 1, šviestuvai 2 x kambariai + vonios + 2.",
-    "Darbų paketai pagal lygį yra pasiūlymas pagal konkurentų paketus. Standartiniame lygyje griaunama vonia (10 proc. ploto), tinkuojama ir grindys lyginamos tik pagal būklę.",
-    "Rezervas: dalinis 10 proc., standartinis 12, pilnas ir prabangus 15. Senam pastatui iki 1990 m. pridedama 5 proc.",
+    "Numatyti kiekiai: elektros taškai 6 + 3 x kambariai, santechnikos taškai 2 x vonios + 2, durys kambariai + vonios ar WC + 1, radiatoriai kambariai + 1, šviestuvai 2 x kambariai + vonios + 2.",
+    "Darbų paketai pagal lygį yra pasiūlymas pagal konkurentų paketus. Standartiniame lygyje griaunama vonia (10 proc. ploto), tinkuojama ir grindys lyginamos tik pagal būklę. Kai pažymėta visa elektros ar santechnikos instaliacija, atskiri taškai neskaičiuojami.",
+    "@RESERVE",
     "Sudėtingumas: be lifto 3-5 aukštas +3 proc., 6 ir aukščiau +5, lubos virš 3,1 m +5, gyvenama remonto metu +5. Taikoma tik darbui.",
     "Intervalas: eilučių kainų sklaida mažinama koeficientu k (1,0, 0,8 arba 0,6 pagal tikslumą), kiekių netikrumas 15, 10 arba 5 proc. Tai modelis, ne statistinė tikimybė.",
     "Atsargos medžiagoms: dažai ir glaistas 5 proc. (labai nelygioms sienoms glaistas 10), plytelės 10, laminatas, vinilas ir parketlentės 7 (šaltinio nėra).",
-    "Smulkios medžiagos (gruntas, juostos, silikonas) 10 proc. nuo medžiagų. Gipso kartono karkasas +100 proc. nuo plokščių kainos.",
+    "Smulkios medžiagos (tvirtinimo detalės, silikonas, juostos) 10 proc. nuo medžiagų. Gipso kartono lubų karkasas +100 proc. nuo plokščių kainos.",
     "Visos instaliacijos komplektai skirti apie 55 m2 butui ir perskaičiuojami pagal plotą (plotas / 55) laipsniu 0,7, ribose 0,6-2,0.",
-    "Vonios plytelės iki 2 m aukščio. Hidroizoliacija: grindys, 0,2 m sienų juosta ir 8 m2 dušo zona. Vonios sienos skaičiuojamos ir dažymui, kaip numatyta specifikacijoje.",
+    "Vonios plytelės iki 2 m aukščio arba iki lubų. Plytelėmis klijuojama sienų dalis neglaistoma ir nedažoma. Hidroizoliacija: grindys, 0,2 m sienų juosta ir 8 m2 dušo zona (tik kai yra dušas ar vonia).",
     "Šildomos grindys skaičiuojamos vonios, virtuvės ir koridoriaus plotui. Dideli plytelių formatai taikomi prabangiam lygiui.",
-    "Langai, techninė priežiūra, skydelio medžiagos, tapetai, grindjuostės, hidroizoliacijos ir šildymo medžiagos neturi patikrintos kainos ir į sumą neįtraukti.",
+    "Langai (yra tik mažiausios „nuo“ kainos), techninė priežiūra, grindų paklotas, RCD, potinkinės dėžutės, sifonai, trapas ir padėklas, plytelių profiliai, tapetų klijai ir šildomų grindų kilimėliai neturi kainos ir į sumą neįtraukti (rodomi skiltyje „Kas neįeina“).",
     "Trukmė: dalinis 1-3 sav., standartinis 4-8, pilnas 10-16 (nauja statyba) arba 8-17 (sena), prabangus x 1,25, perskaičiuojama pagal plotą. Su projektu +2 sav.",
     "Įspėjimas apie neįprastą EUR/m2 rodomas, kai vidurkis iškrenta iš lygio koridoriaus ir be PVM, ir su PVM, nes koridoriaus šaltinių PVM būsena nevienoda.",
     "Atskirai patalpai įspėjimas apie EUR/m2 nerodomas, o visos instaliacijos komplektai pagal nutylėjimą išjungti.",
@@ -762,15 +863,27 @@
     stage = document.getElementById("stage");
     applyConfig();
     priceTable();
-    document.getElementById("assumeList").innerHTML = ASSUME.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+    // Regionų koeficientai ir rezervai imami iš config.js ir calc.js, kad tekstas nesiskirtų nuo skaičiavimo.
+    var d2 = function (v) { return v.toFixed(2).replace(".", ","); }, pc = function (v) { return Math.round(v * 100); }, L = R.C.levels;
+    var dyn = {
+      "@REGIONS": "Regioniniai koeficientai taikomi tik darbui: " + CFG.regions.map(function (x) { return x.label + " " + d2(x.coef); }).join(", ") + ". Patvirtinimo šaltinio nėra.",
+      "@RESERVE": "Rezervas: dalinis " + pc(L.partial.reserve) + " proc., standartinis " + pc(L.standard.reserve) + ", pilnas " + pc(L.full.reserve) + ", prabangus " + pc(L.luxury.reserve) + ". Pastatui, statytam iki 1990 m., pridedama " + pc(R.C.reserveOldBonus) + " proc."
+    };
+    var items = ASSUME.map(function (x) { return dyn[x] || x; });
+    document.getElementById("assumeList").innerHTML = items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+    var nI = items.length, t10 = nI % 10, t100 = nI % 100;
+    document.getElementById("assumeCount").textContent = nI + " " + ((t100 >= 10 && t100 <= 20) || t10 === 0 ? "punktų" : t10 === 1 ? "punktas" : "punktai") + ". Atidarykite, kad perskaitytumėte.";
     document.addEventListener("change", onChange);
     document.addEventListener("input", onInput);
     document.addEventListener("click", onClick);
     document.addEventListener("submit", onSubmit);
-    window.addEventListener("beforeprint", function () { if (!document.getElementById("printSheet").innerHTML) buildPrint(); });
+    window.addEventListener("beforeprint", function () { buildPrint(); }); // visada šviežia santrauka (PVM ar atsakymai galėjo pasikeisti)
+    window.addEventListener("popstate", onPop);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") { var open = stage.querySelector('.term-btn[aria-expanded="true"]'); if (open) { open.setAttribute("aria-expanded", "false"); document.getElementById(open.getAttribute("aria-controls")).hidden = true; open.focus(); } } });
+    try { history.replaceState({ step: 0 }, ""); } catch (e) { /* */ }
     render(false);
     // Tik testams: leidžia patikrinti būseną ir paruoštą mailto nuorodą, jos neatidarant.
-    window.__calcApp = { state: S, calc: calc, buildPrint: buildPrint, csvText: function () { return csvText(calc()); }, buildMailto: function () { return buildMailto(calc()); } };
+    window.__calcApp = { state: S, calc: calc, heroChip: heroChip, buildPrint: buildPrint, csvText: function () { return csvText(calc()); }, buildMailto: function () { return buildMailto(calc()); } };
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
