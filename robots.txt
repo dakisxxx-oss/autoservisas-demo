@@ -1,0 +1,5 @@
+# KEISTI: pakeiskite pavyzdys.example tikru domenu
+User-agent: *
+Allow: /
+
+Sitemap: https://pavyzdys.example/sitemap.xml
